@@ -12,21 +12,28 @@ public class Main extends GameEngine implements EngineFrame{
 	}
 
 	public static void main(String[] args){
-		Main main = new Main(100,100,500,600);
+		Main main = new Main(100,100,800,600);
 		main.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		main.setResizable(false);
+		main.setTitle("Physics Game");
 		main.run();
 		System.exit(0);
 	}
 	
 	@Override
 	public void update() {
-		
+		y1++;
+		y2++;
 	}
 
+	int y1 = 0;
+	int y2 = 0;
+	
+	
 	@Override
 	public void draw(Graphics g) {
-		
+		g.drawLine(0, y1, WIDTH, y2);
+		super.draw(g);
 	}
 
 }

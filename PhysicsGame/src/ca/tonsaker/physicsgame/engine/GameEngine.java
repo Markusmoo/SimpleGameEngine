@@ -9,16 +9,17 @@ import javax.swing.JFrame;
  */ 
 public abstract class GameEngine extends JFrame 
 {        
-        boolean isRunning = true; 
-        int fps = 30; 
-        int WIDTH;
-        int HEIGHT;
+        private boolean isRunning = true; 
+        private int fps;
+        public int WIDTH;
+        public int HEIGHT;
         
         BufferedImage backBuffer; 
         Insets insets; 
         InputHandler input; 
         
         public GameEngine(int x, int y, int width, int height){
+        	fps = 30;
         	this.setSize(width, height);
         	this.setLocation(x, y);
         }
@@ -52,6 +53,10 @@ public abstract class GameEngine extends JFrame
                 setVisible(false); 
         }
         
+        public void setFPS(int fps){
+        	this.fps = fps;
+        }
+        
         public void setSize(Dimension d){
         	WIDTH = (int) d.getHeight();
         	HEIGHT = (int) d.getWidth();
@@ -69,6 +74,8 @@ public abstract class GameEngine extends JFrame
          */ 
         public void init(){ 
                 setVisible(true); 
+                
+
                 
                 insets = getInsets(); 
                 setSize(insets.left + WIDTH + insets.right, 
