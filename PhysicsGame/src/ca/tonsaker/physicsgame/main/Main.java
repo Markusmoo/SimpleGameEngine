@@ -6,6 +6,7 @@ import java.util.Random;
 
 import ca.tonsaker.physicsgame.engine.EngineFrame;
 import ca.tonsaker.physicsgame.engine.GameEngine;
+import javax.swing.JCheckBox;
 
 public class Main extends GameEngine implements EngineFrame{
 
@@ -17,20 +18,31 @@ public class Main extends GameEngine implements EngineFrame{
 	}
 
 	public static void main(String[] args){
-		Main main = new Main(100,100,800,600);
+		Main main = new Main(0,0,1920,1080);
 		main.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		main.setResizable(false);
+		main.setResizable(true);
 		main.setTitle("Physics Game");
+		main.setFPS(60);
 		main.run();
 		System.exit(0);
 	}
 	
+	int a = 0;
+	
 	@Override
 	public void update() {
+
 		if(y1 < Main.HEIGHT && y2 < Main.HEIGHT){
 			y1++;
 			y2++;
 		
+			if(a >= 10){
+				bCol+=6;
+				a=0;
+			}else{
+				a++;
+			}
+			
 			if(rCol < 255 && xUp){
 				rCol+=interval;
 			}
@@ -59,10 +71,10 @@ public class Main extends GameEngine implements EngineFrame{
 	int y1 = 0;
 	int y2 = 0;
 	
-	int interval = 3;
+	int interval = 10;
 	int rCol = 0;
 	int gCol = 255;
-	int bCol = 100;
+	int bCol = 0;
 	
 	private void safetyColour(){
 		if(rCol < 0){
@@ -90,7 +102,7 @@ public class Main extends GameEngine implements EngineFrame{
 	@Override
 	public void draw(Graphics g) {
 		safetyColour();
-		g.setColor(new Color(rCol, gCol, bCol));
+		g.setColor(new Color(r.nextInt(rCol+1), r.nextInt(gCol+1), r.nextInt(bCol+1)));
 		g.drawLine(0, y1, WIDTH, y2);
 		super.draw(g);
 	}
