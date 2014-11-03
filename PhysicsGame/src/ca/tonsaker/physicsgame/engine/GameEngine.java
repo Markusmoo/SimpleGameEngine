@@ -11,8 +11,8 @@ public abstract class GameEngine extends JFrame
 {        
         private boolean isRunning = true; 
         private int fps;
-        public int WIDTH;
-        public int HEIGHT;
+        public static int WIDTH;
+        public static int HEIGHT;
         
         BufferedImage backBuffer; 
         Insets insets; 
@@ -22,6 +22,8 @@ public abstract class GameEngine extends JFrame
         	fps = 30;
         	this.setSize(width, height);
         	this.setLocation(x, y);
+        	WIDTH = width;
+        	HEIGHT = height;
         }
  
         
