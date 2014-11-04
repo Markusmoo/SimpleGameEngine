@@ -14,7 +14,7 @@ import javax.swing.JPanel;
  * @since 2014/11/03
  */
 @SuppressWarnings("serial")
-public abstract class GameEngine extends JPanel {        
+public abstract class GameEngine extends JPanel implements EngineFrame {        
         private boolean isRunning = true; 
         private int fps;
         
