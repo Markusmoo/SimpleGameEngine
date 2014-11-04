@@ -1,4 +1,4 @@
-package ca.tonsaker.physicsgame.engine;
+package ca.tonsaker.SimpleGameEngine.engine;
 
 import java.awt.Graphics;
 

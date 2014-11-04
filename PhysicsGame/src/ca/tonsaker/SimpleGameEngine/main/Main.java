@@ -1,9 +1,9 @@
-package ca.tonsaker.physicsgame.main;
+package ca.tonsaker.SimpleGameEngine.main;
 
 import java.awt.Graphics;
 
-import ca.tonsaker.physicsgame.engine.EngineFrame;
-import ca.tonsaker.physicsgame.engine.GameEngine;
+import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
+import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
 
 import javax.swing.JFrame;
 
