@@ -12,7 +12,6 @@ public class Main extends GameEngine implements EngineFrame{
 	
 	public Main(int x, int y, int width, int height) {
 		super(x, y, width, height);
-		
 	}
 
 	public static void main(String[] args){
@@ -33,13 +32,13 @@ public class Main extends GameEngine implements EngineFrame{
 	
 	@Override
 	public void update() {
-		
+
 	}
 	
 	@Override
 	public void draw(Graphics g) {
 		super.draw(g); //Always call super.draw(g) first!
-		
+		g.fillRect(100, 100, 100, 100);
 	}
 
 }

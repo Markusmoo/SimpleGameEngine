@@ -183,6 +183,6 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 * @param g - The graphics device to paint to.
 	 */ 
 	public void draw(Graphics g){
-		paint(g);
+		//this.paintComponent(g);
 	}
 } 
