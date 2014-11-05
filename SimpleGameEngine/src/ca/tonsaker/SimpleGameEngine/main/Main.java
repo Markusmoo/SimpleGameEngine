@@ -20,9 +20,9 @@ public class Main extends GameEngine implements EngineFrame{
 		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Sets the default close operation to erase all memory and close the Program
 		main.setResizable(false); //Disallows the parent JFrame to be resized
 		main.setTitle("SIMPLE TITLE"); //Changes the title of the parent JFrame
-		main.setFPS(60); //The FPS (at the moment) will affect how fast something will move across the screen as well
+		main.setFPS(60); //The FPS (Frames per second)
+		main.setUPS(30); //The UPS (Updates per second)
 		main.run(); //Starts the update and drawing loop at the set FPS
-		System.exit(0); //If loop stops then the program will exit with status 0
 	}
 	
 	@Override
@@ -37,8 +37,8 @@ public class Main extends GameEngine implements EngineFrame{
 	}
 	
 	@Override
-	public void draw(Graphics g) {
-		super.draw(g); //Always call super.draw(g) first!
+	public void paint(Graphics g) {
+		super.paint(g); //Always call super.draw(g) first!
 		
 	}
 
