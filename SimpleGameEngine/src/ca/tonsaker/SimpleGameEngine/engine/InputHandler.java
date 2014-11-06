@@ -54,5 +54,5 @@ public class InputHandler implements KeyListener{
     /** 
      * Not used 
      */ 
-    public void keyTyped(KeyEvent e){} 
+    public void keyTyped(KeyEvent e){}
 } 
