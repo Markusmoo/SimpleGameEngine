@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Random;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
@@ -62,8 +63,16 @@ public class Main extends GameEngine implements EngineFrame{
 	@Override
 	public void draw(Graphics g) {
 		super.draw(g); //Always call super.draw(g) first!
-		g.setColor(new Color(red,120,blue));
+		Color org = g.getColor();
+		Color gradColour = new Color(red,120,blue);
+		Color randColour = new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255));
+		g.setColor(randColour);
+		g.fillOval(this.getWidth()-xPos, this.getHeight()-yPos, 30, 30);
+		g.setColor(gradColour);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		g.setColor(randColour);
+		g.fillOval(this.getWidth()-xPos, this.getHeight()-yPos, 30, 30);
+		g.setColor(org);
 	}
 
 }
