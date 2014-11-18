@@ -18,6 +18,8 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
         private boolean isRunning = true; 
         private int fps;
         
+        
+        
         protected JFrame frame; 
         public InputHandler input; 
         
@@ -81,7 +83,7 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 */
 	public void setDefaultCloseOperation(int operation){
 		frame.setDefaultCloseOperation(operation);
-		
+
 	}
 	
 	/**

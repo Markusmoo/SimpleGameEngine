@@ -3,18 +3,21 @@ package ca.tonsaker.SimpleGameEngine.main;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.Rectangle;
 import java.util.Random;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
-import ca.tonsaker.SimpleGameEngine.engine.InputHandler;
 
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
 public class Main extends GameEngine implements EngineFrame{
+	
+	public static final int TOP = 0;
+	public static final int RIGHT = 1;
+	public static final int BOTTOM = 2;
+	public static final int LEFT = 3;
 	
 	public static final String title = "Color Grid";
 	
@@ -32,17 +35,43 @@ public class Main extends GameEngine implements EngineFrame{
 		System.exit(0); //If loop stops then the program will exit with status 0
 	}
 	
+	public Random rand;
 	public int xPos, yPos;
 	public int red, green, blue;
+	public Rectangle p1;
+	public Ball[] balls;
+	public int numBalls;
+	public final int MAX_BALLS = 100;
 	
-	@Override
-	public void init(){
-		super.init(); //Always call super.init() first!
-		
+	public void spawnBall(int side){
+		if(numBalls <= MAX_BALLS){
+			switch(side){
+				case(TOP):
+					balls[numBalls++] = new Ball(rand.nextInt(getWidth()), 0, 30, 30, Ball.DOWN, 3);
+					break;
+				case(RIGHT):
+					balls[numBalls++] = new Ball(getWidth(), rand.nextInt(getHeight()), 30, 30, Ball.LEFT, 3);
+					break;
+				case(BOTTOM):
+					balls[numBalls++] = new Ball(rand.nextInt(getWidth()), getHeight(), 30, 30, Ball.DOWN, 3);
+					break;
+				case(LEFT):
+					balls[numBalls++] = new Ball(rand.nextInt(getWidth()), 0, 30, 30, Ball.DOWN, 3);
+					break;
+				default:
+			}
+		}
 	}
 	
-	@Override
-	public void update() {
+	public void updateBalls(){
+		for(Ball b : balls){
+			if(b != null){
+				b.update();
+			}
+		}
+	}
+	
+	public void mouseCalc(){
 		Point mouseP = this.getMousePosition();
 		if(mouseP != null){
 			xPos = mouseP.x;
@@ -61,6 +90,26 @@ public class Main extends GameEngine implements EngineFrame{
 	}
 	
 	@Override
+	public void init(){
+		super.init(); //Always call super.init() first!
+		rand = new Random();
+		balls = new Ball[MAX_BALLS];
+	}
+	
+	int counter = 0;
+	@Override
+	public void update() {
+		counter++;
+		if(counter >= 100){
+			spawnBall(2);
+			counter = 0;
+		}
+		
+		mouseCalc();
+		updateBalls();
+	}
+	
+	@Override
 	public void draw(Graphics g) {
 		super.draw(g); //Always call super.draw(g) first!
 		Color org = g.getColor();
@@ -72,6 +121,12 @@ public class Main extends GameEngine implements EngineFrame{
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		g.setColor(randColour);
 		g.fillOval(this.getWidth()-xPos, this.getHeight()-yPos, 30, 30);
+		
+		for(Ball b : balls){
+			if(b != null){
+				b.draw(g);
+			}
+		}
 		g.setColor(org);
 	}
 
