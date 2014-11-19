@@ -41,7 +41,7 @@ public class Main extends GameEngine implements EngineFrame{
 	public Rectangle p1;
 	public Ball[] balls;
 	public int numBalls;
-	public final int MAX_BALLS = 100;
+	public final int MAX_BALLS = 50;
 	
 	public void spawnBall(int side){
 		if(numBalls <= MAX_BALLS){
@@ -50,7 +50,7 @@ public class Main extends GameEngine implements EngineFrame{
 				case(TOP):
 					for(Ball b : balls){
 						if(b == null){
-							balls[idx] = new Ball(rand.nextInt(getWidth()), 0, 30, 30, Ball.DOWN, 3);
+							balls[idx] = new Ball(rand.nextInt(getWidth()), 0, rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.DOWN, rand.nextInt(9)+1);
 							break;
 						}
 						idx++;
@@ -59,7 +59,7 @@ public class Main extends GameEngine implements EngineFrame{
 				case(RIGHT):
 					for(Ball b : balls){
 						if(b == null){
-							balls[idx] = new Ball(getWidth(), rand.nextInt(getHeight()), 30, 30, Ball.LEFT, 3);
+							balls[idx] = new Ball(getWidth(), rand.nextInt(getHeight()), rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.DOWN, rand.nextInt(9)+1);
 							break;
 						}
 						idx++;
@@ -68,7 +68,7 @@ public class Main extends GameEngine implements EngineFrame{
 				case(BOTTOM):
 					for(Ball b : balls){
 						if(b == null){
-							balls[idx] = new Ball(rand.nextInt(getWidth()), getHeight(), 30, 30, Ball.UP, 3);
+							balls[idx] = new Ball(rand.nextInt(getWidth()), getHeight(), rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.DOWN, rand.nextInt(9)+1);
 							break;
 						}
 						idx++;
@@ -77,7 +77,7 @@ public class Main extends GameEngine implements EngineFrame{
 				case(LEFT):
 					for(Ball b : balls){
 						if(b == null){
-							balls[idx] = new Ball(0, rand.nextInt(getHeight()), 30, 30, Ball.RIGHT, 3);
+							balls[idx] = new Ball(0, rand.nextInt(getHeight()), rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.DOWN, rand.nextInt(9)+1);
 							break;
 						}
 						idx++;
@@ -86,7 +86,7 @@ public class Main extends GameEngine implements EngineFrame{
 				default:
 					for(Ball b : balls){
 						if(b == null){
-							balls[idx] = new Ball(rand.nextInt(getWidth()), 0, 30, 30, Ball.DOWN, 3);
+							balls[idx] = new Ball(rand.nextInt(getWidth()), 0, rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.DOWN, rand.nextInt(9)+1);
 							break;
 						}
 						idx++;
