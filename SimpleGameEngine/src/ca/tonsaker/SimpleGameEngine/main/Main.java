@@ -45,29 +45,67 @@ public class Main extends GameEngine implements EngineFrame{
 	
 	public void spawnBall(int side){
 		if(numBalls <= MAX_BALLS){
+			int idx = 0;
 			switch(side){
 				case(TOP):
-					balls[numBalls++] = new Ball(rand.nextInt(getWidth()), 0, 30, 30, Ball.DOWN, 3);
+					for(Ball b : balls){
+						if(b == null){
+							balls[idx] = new Ball(rand.nextInt(getWidth()), 0, 30, 30, Ball.DOWN, 3);
+							break;
+						}
+						idx++;
+					}
 					break;
 				case(RIGHT):
-					balls[numBalls++] = new Ball(getWidth(), rand.nextInt(getHeight()), 30, 30, Ball.LEFT, 3);
+					for(Ball b : balls){
+						if(b == null){
+							balls[idx] = new Ball(getWidth(), rand.nextInt(getHeight()), 30, 30, Ball.LEFT, 3);
+							break;
+						}
+						idx++;
+					}
 					break;
 				case(BOTTOM):
-					balls[numBalls++] = new Ball(rand.nextInt(getWidth()), getHeight(), 30, 30, Ball.DOWN, 3);
+					for(Ball b : balls){
+						if(b == null){
+							balls[idx] = new Ball(rand.nextInt(getWidth()), getHeight(), 30, 30, Ball.UP, 3);
+							break;
+						}
+						idx++;
+					}
 					break;
 				case(LEFT):
-					balls[numBalls++] = new Ball(rand.nextInt(getWidth()), 0, 30, 30, Ball.DOWN, 3);
+					for(Ball b : balls){
+						if(b == null){
+							balls[idx] = new Ball(0, rand.nextInt(getHeight()), 30, 30, Ball.RIGHT, 3);
+							break;
+						}
+						idx++;
+					}
 					break;
 				default:
+					for(Ball b : balls){
+						if(b == null){
+							balls[idx] = new Ball(rand.nextInt(getWidth()), 0, 30, 30, Ball.DOWN, 3);
+							break;
+						}
+						idx++;
+					}
 			}
 		}
 	}
 	
 	public void updateBalls(){
+		int idx = 0;
 		for(Ball b : balls){
 			if(b != null){
 				b.update();
+				if(!this.contains(b.getLocation())){
+					System.out.println(b + " removed.");
+					balls[idx] = null;
+				}
 			}
+			idx++;
 		}
 	}
 	
@@ -100,8 +138,8 @@ public class Main extends GameEngine implements EngineFrame{
 	@Override
 	public void update() {
 		counter++;
-		if(counter >= 100){
-			spawnBall(2);
+		if(counter >= 30){
+			spawnBall(rand.nextInt(3));
 			counter = 0;
 		}
 		

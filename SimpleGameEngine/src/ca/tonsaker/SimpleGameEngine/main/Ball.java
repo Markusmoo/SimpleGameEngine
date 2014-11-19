@@ -45,6 +45,9 @@ public class Ball extends Rectangle implements EngineFrame{
 	
 	@Override
 	public void draw(Graphics g){
-		g.drawOval(x, y, width, height);
+		Color org = g.getColor();
+		g.setColor(Color.BLACK);
+		g.fillOval(x, y, width, height);
+		g.setColor(org);
 	}
 }
