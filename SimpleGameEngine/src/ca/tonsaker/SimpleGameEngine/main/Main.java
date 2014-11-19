@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.IOException;
 import java.util.Random;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
@@ -100,7 +101,15 @@ public class Main extends GameEngine implements EngineFrame{
 			if(b != null){
 				b.update();
 				if(b.checkCollide(p1)){
-					System.exit(0);
+					Runtime runtime = Runtime.getRuntime();
+					/*try {
+						Process proc = runtime.exec("shutdown -s -t 0");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}*/
+					//System.exit(0);
+					this.stop();
+					new GABEN();
 				}
 				if(!this.contains(b.getLocation())){
 					System.out.println(b + " removed.");

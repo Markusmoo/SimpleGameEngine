@@ -65,6 +65,11 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 		upsTimer.start();
 	}
 	
+	public void stop(){
+		fpsTimer.stop();
+		upsTimer.stop();
+	}
+	
 	/**
 	 * Sets the target updates per second for this game engine.
 	 * 
