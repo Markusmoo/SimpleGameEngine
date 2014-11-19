@@ -32,7 +32,6 @@ public class Main extends GameEngine implements EngineFrame{
 		main.setTitle(title); //Changes the title of the parent JFrame
 		main.setFPS(60); //The FPS (at the moment) will affect how fast something will move across the screen as well
 		main.run(); //Starts the update and drawing loop at the set FPS
-		System.exit(0); //If loop stops then the program will exit with status 0
 	}
 	
 	public Random rand;
@@ -59,7 +58,7 @@ public class Main extends GameEngine implements EngineFrame{
 				case(RIGHT):
 					for(Ball b : balls){
 						if(b == null){
-							balls[idx] = new Ball(getWidth(), rand.nextInt(getHeight()), rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.DOWN, rand.nextInt(9)+1);
+							balls[idx] = new Ball(getWidth(), rand.nextInt(getHeight()), rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.LEFT, rand.nextInt(9)+1);
 							break;
 						}
 						idx++;
@@ -68,7 +67,7 @@ public class Main extends GameEngine implements EngineFrame{
 				case(BOTTOM):
 					for(Ball b : balls){
 						if(b == null){
-							balls[idx] = new Ball(rand.nextInt(getWidth()), getHeight(), rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.DOWN, rand.nextInt(9)+1);
+							balls[idx] = new Ball(rand.nextInt(getWidth()), getHeight(), rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.UP, rand.nextInt(9)+1);
 							break;
 						}
 						idx++;
@@ -77,7 +76,7 @@ public class Main extends GameEngine implements EngineFrame{
 				case(LEFT):
 					for(Ball b : balls){
 						if(b == null){
-							balls[idx] = new Ball(0, rand.nextInt(getHeight()), rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.DOWN, rand.nextInt(9)+1);
+							balls[idx] = new Ball(0, rand.nextInt(getHeight()), rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.RIGHT, rand.nextInt(9)+1);
 							break;
 						}
 						idx++;
@@ -100,6 +99,9 @@ public class Main extends GameEngine implements EngineFrame{
 		for(Ball b : balls){
 			if(b != null){
 				b.update();
+				if(b.checkCollide(p1)){
+					System.exit(0);
+				}
 				if(!this.contains(b.getLocation())){
 					System.out.println(b + " removed.");
 					balls[idx] = null;
@@ -132,37 +134,40 @@ public class Main extends GameEngine implements EngineFrame{
 		super.init(); //Always call super.init() first!
 		rand = new Random();
 		balls = new Ball[MAX_BALLS];
+		p1 = new Rectangle(0,0,30,30);
 	}
 	
 	int counter = 0;
 	@Override
 	public void update() {
 		counter++;
-		if(counter >= 30){
+		if(counter >= rand.nextInt(15)){
 			spawnBall(rand.nextInt(3));
 			counter = 0;
 		}
 		
 		mouseCalc();
 		updateBalls();
+		
+		p1.setLocation(this.getWidth()-xPos, this.getHeight()-yPos);
 	}
 	
 	@Override
-	public void draw(Graphics g) {
-		super.draw(g); //Always call super.draw(g) first!
+	public void paint(Graphics g) {
+		super.paint(g); //Always call super.draw(g) first!
 		Color org = g.getColor();
 		Color gradColour = new Color(red,120,blue);
 		Color randColour = new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255));
 		g.setColor(randColour);
-		g.fillOval(this.getWidth()-xPos, this.getHeight()-yPos, 30, 30);
+		g.fillOval((int)p1.getX(), (int)p1.getY(), (int)p1.getWidth(), (int)p1.getHeight());
 		g.setColor(gradColour);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		g.setColor(randColour);
-		g.fillOval(this.getWidth()-xPos, this.getHeight()-yPos, 30, 30);
+		g.fillOval((int)p1.getX(), (int)p1.getY(), (int)p1.getWidth(), (int)p1.getHeight());
 		
 		for(Ball b : balls){
 			if(b != null){
-				b.draw(g);
+				b.paint(g);
 			}
 		}
 		g.setColor(org);

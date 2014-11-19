@@ -2,9 +2,12 @@ package ca.tonsaker.SimpleGameEngine.engine;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame; 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  * A simple to use Game Engine that runs in a {@link JPanel} inside of a {@link JFrame}
@@ -17,14 +20,34 @@ import javax.swing.JPanel;
 public abstract class GameEngine extends JPanel implements EngineFrame {        
         private boolean isRunning = true; 
         private int fps;
+        private int ups;
         
-        
+        private Timer fpsTimer;
+        private Timer upsTimer;
         
         protected JFrame frame; 
         public InputHandler input; 
         
         public GameEngine(int x, int y, int width, int height){
-        	fps = 30; //Sets default FPS
+    		fpsTimer = new Timer(0, new ActionListener(){
+
+    			@Override
+    			public void actionPerformed(ActionEvent e) {
+    				repaint();
+    			}
+    			
+    		});
+    		
+    		upsTimer = new Timer(0, new ActionListener(){
+
+    			@Override
+    			public void actionPerformed(ActionEvent e) {
+    				update();
+    			}
+    			
+    		});
+        	setFPS(60); //Sets default FPS
+        	setUPS(30); //Sets default UPS
         	frame = new JFrame(); //Creates a JFrame that will contain this (JPanel)
         	frame.setLocation(x, y); //Sets the location of the JFrame
         	frame.setSize(width, height); //Sets the size of the JFrame
@@ -36,25 +59,29 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 * This method starts the game and runs it in a loop 
 	 */ 
 	public void run(){ 
-        init(); 
-        
-        while(isRunning){ 
-            long time = System.currentTimeMillis(); 
-            
-            update(); 
-            draw(this.getGraphics()); 
-            
-            //Delay for each frame - time it took for one frame 
-            time = (1000 / fps) - (System.currentTimeMillis() - time); 
-            
-            if (time > 0){ 
-                try{ 
-                	Thread.sleep(time); 
-                }catch(Exception e){} 
-            } 
-        } 
-        
-        setVisible(false); 
+        init();
+		
+		fpsTimer.start();
+		upsTimer.start();
+	}
+	
+	/**
+	 * Sets the target updates per second for this game engine.
+	 * 
+	 * @param ups - The number of frames per second this game can run.
+	 */
+	public void setUPS(int ups){
+		this.ups = ups;
+		upsTimer.setDelay(1000 / this.ups);
+	}
+	
+	/**
+	 * Gets the target updates per second for this game engine.
+	 * 
+	 * @return the UPS value
+	 */
+	public int getUPS(){
+		return this.ups;
 	}
 	
 	/**
@@ -64,6 +91,7 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 */
 	public void setFPS(int fps){
 		this.fps = fps;
+		fpsTimer.setDelay(1000 / this.fps);
 	}
 	
 	/**
@@ -83,7 +111,7 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 */
 	public void setDefaultCloseOperation(int operation){
 		frame.setDefaultCloseOperation(operation);
-
+		
 	}
 	
 	/**
@@ -184,7 +212,7 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 * 
 	 * @param g - The graphics device to paint to.
 	 */ 
-	public void draw(Graphics g){
-		//this.paintComponent(g);
+	public void paint(Graphics g){
+		super.paint(g);
 	}
 } 

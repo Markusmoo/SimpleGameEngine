@@ -22,6 +22,10 @@ public class Ball extends Rectangle implements EngineFrame{
 		speed = spd;
 	}
 	
+	public boolean checkCollide(Rectangle bounds){
+		return bounds.intersects(this);
+	}
+	
 	@Override
 	public void init() {}
 
@@ -44,7 +48,7 @@ public class Ball extends Rectangle implements EngineFrame{
 	}
 	
 	@Override
-	public void draw(Graphics g){
+	public void paint(Graphics g){
 		Color org = g.getColor();
 		g.setColor(Color.BLACK);
 		g.fillOval(x, y, width, height);
