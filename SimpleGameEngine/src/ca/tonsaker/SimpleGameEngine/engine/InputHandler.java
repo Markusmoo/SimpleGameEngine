@@ -8,14 +8,16 @@ import java.awt.event.*;
  */ 
 public class InputHandler implements KeyListener{
 	
-	private boolean[] keys;
+	private boolean[] keysRePress;
+	private boolean[] keysTyped;
 	
     /** 
      * Assigns the newly created InputHandler to a Component 
      * @param c Component to get input from 
      */ 
     public InputHandler(Component c){ 
-    	keys = new boolean[256];
+    	keysRePress = new boolean[256];
+    	keysTyped = new boolean[256];
     	c.addKeyListener(this); 
     } 
     
@@ -26,10 +28,17 @@ public class InputHandler implements KeyListener{
      */ 
     public boolean isKeyDown(int keyCode){ 
         if (keyCode > 0 && keyCode < 256){
-        	return keys[keyCode]; 
+        	return keysRePress[keyCode]; 
         }
         return false; 
-    } 
+    }
+    
+    public boolean isKeyTyped(int keyCode){
+    	if (keyCode > 0 && keyCode < 256){
+        	return keysTyped[keyCode]; 
+        }
+        return true; 
+    }
     
     /** 
      * Called when a key is pressed while the component is focused 
@@ -37,7 +46,7 @@ public class InputHandler implements KeyListener{
      */ 
     public void keyPressed(KeyEvent e){ 
         if (e.getKeyCode() > 0 && e.getKeyCode() < 256){ 
-        	keys[e.getKeyCode()] = true;
+        	keysRePress[e.getKeyCode()] = true;
         } 
     } 
 
@@ -47,7 +56,7 @@ public class InputHandler implements KeyListener{
      */ 
     public void keyReleased(KeyEvent e){ 
         if (e.getKeyCode() > 0 && e.getKeyCode() < 256){ 
-        	keys[e.getKeyCode()] = false; 
+        	keysRePress[e.getKeyCode()] = false; 
         } 
     } 
 

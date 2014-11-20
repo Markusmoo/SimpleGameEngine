@@ -51,7 +51,7 @@ public class Ball extends Rectangle implements EngineFrame{
 	public void paint(Graphics g){
 		Color org = g.getColor();
 		g.setColor(Color.BLACK);
-		g.fillOval(x, y, width, height);
+		g.drawOval(x, y, width, height);
 		g.setColor(org);
 	}
 }

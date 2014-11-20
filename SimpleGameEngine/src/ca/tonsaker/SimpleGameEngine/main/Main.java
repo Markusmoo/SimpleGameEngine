@@ -20,7 +20,7 @@ public class Main extends GameEngine implements EngineFrame{
 	public static final int BOTTOM = 2;
 	public static final int LEFT = 3;
 	
-	public static final String title = "Color Grid";
+	public static final String title = "DodgeBall Test Game by Markus Tonsaker (Hold F3 for Debug)";
 	
 	public Main(int x, int y, int width, int height) {
 		super(x, y, width, height);
@@ -36,6 +36,9 @@ public class Main extends GameEngine implements EngineFrame{
 	}
 	
 	public DebugOverlay debug;
+	public boolean collisionTesting = true;
+	
+	public long score = 0;
 	
 	public Random rand;
 	public int xPos, yPos;
@@ -53,6 +56,7 @@ public class Main extends GameEngine implements EngineFrame{
 					for(Ball b : balls){
 						if(b == null){
 							balls[idx] = new Ball(rand.nextInt(getWidth()), 0, rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.DOWN, rand.nextInt(9)+1);
+							numBalls++;
 							break;
 						}
 						idx++;
@@ -62,6 +66,7 @@ public class Main extends GameEngine implements EngineFrame{
 					for(Ball b : balls){
 						if(b == null){
 							balls[idx] = new Ball(getWidth(), rand.nextInt(getHeight()), rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.LEFT, rand.nextInt(9)+1);
+							numBalls++;
 							break;
 						}
 						idx++;
@@ -71,6 +76,7 @@ public class Main extends GameEngine implements EngineFrame{
 					for(Ball b : balls){
 						if(b == null){
 							balls[idx] = new Ball(rand.nextInt(getWidth()), getHeight(), rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.UP, rand.nextInt(9)+1);
+							numBalls++;
 							break;
 						}
 						idx++;
@@ -80,6 +86,7 @@ public class Main extends GameEngine implements EngineFrame{
 					for(Ball b : balls){
 						if(b == null){
 							balls[idx] = new Ball(0, rand.nextInt(getHeight()), rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.RIGHT, rand.nextInt(9)+1);
+							numBalls++;
 							break;
 						}
 						idx++;
@@ -89,6 +96,7 @@ public class Main extends GameEngine implements EngineFrame{
 					for(Ball b : balls){
 						if(b == null){
 							balls[idx] = new Ball(rand.nextInt(getWidth()), 0, rand.nextInt(50)+10, rand.nextInt(50)+10, Ball.DOWN, rand.nextInt(9)+1);
+							numBalls++;
 							break;
 						}
 						idx++;
@@ -102,20 +110,23 @@ public class Main extends GameEngine implements EngineFrame{
 		for(Ball b : balls){
 			if(b != null){
 				b.update();
-				if(b.checkCollide(p1)){
-					/*Runtime runtime = Runtime.getRuntime();
-					try {
-						Process proc = runtime.exec("shutdown -s -t 0");
-					} catch (IOException e) {
-						e.printStackTrace();
-					}*/
-					//System.exit(0);
-					//this.stop();
-					//new GABEN();
+				if(collisionTesting){
+					if(b.checkCollide(p1)){
+						/*Runtime runtime = Runtime.getRuntime();
+						try {
+							Process proc = runtime.exec("shutdown -s -t 0");
+						} catch (IOException e) {
+							e.printStackTrace();
+						}*/
+						//System.exit(0);
+						this.stop();
+						new GABEN(score);
+					}
 				}
 				if(!this.contains(b.getLocation())){
 					System.out.println(b + " removed.");
 					balls[idx] = null;
+					numBalls--;
 				}
 			}
 			idx++;
@@ -136,7 +147,6 @@ public class Main extends GameEngine implements EngineFrame{
 			double diagonalWindow = Math.sqrt(widthSq + heightSq);
 			green = (int) (diagonalMouse/(diagonalWindow/255.0));
 			blue = (int) (yPos/(this.getHeight()/255.0));
-			this.setTitle(title+"X:"+xPos+" Y:"+yPos+"   R:"+red+" G:"+green+" B:"+blue);
 		}
 	}
 	
@@ -154,6 +164,7 @@ public class Main extends GameEngine implements EngineFrame{
 	public void update() {
 		counter++;
 		if(counter >= rand.nextInt(15)){
+			score++;
 			spawnBall(rand.nextInt(4));
 			counter = 0;
 		}
@@ -162,6 +173,8 @@ public class Main extends GameEngine implements EngineFrame{
 		updateBalls();
 		
 		debug.update();
+		
+		setTitle(title+" Score: "+score);
 		
 		p1.setLocation(this.getWidth()-xPos, this.getHeight()-yPos);
 	}
