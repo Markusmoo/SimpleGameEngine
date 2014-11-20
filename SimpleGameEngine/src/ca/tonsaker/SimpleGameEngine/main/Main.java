@@ -35,13 +35,15 @@ public class Main extends GameEngine implements EngineFrame{
 		main.run(); //Starts the update and drawing loop at the set FPS
 	}
 	
+	public DebugOverlay debug;
+	
 	public Random rand;
 	public int xPos, yPos;
 	public int red, green, blue;
 	public Rectangle p1;
 	public Ball[] balls;
 	public int numBalls;
-	public final int MAX_BALLS = 50;
+	public final int MAX_BALLS = 70;
 	
 	public void spawnBall(int side){
 		if(numBalls <= MAX_BALLS){
@@ -101,15 +103,15 @@ public class Main extends GameEngine implements EngineFrame{
 			if(b != null){
 				b.update();
 				if(b.checkCollide(p1)){
-					Runtime runtime = Runtime.getRuntime();
-					/*try {
+					/*Runtime runtime = Runtime.getRuntime();
+					try {
 						Process proc = runtime.exec("shutdown -s -t 0");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}*/
 					//System.exit(0);
-					this.stop();
-					new GABEN();
+					//this.stop();
+					//new GABEN();
 				}
 				if(!this.contains(b.getLocation())){
 					System.out.println(b + " removed.");
@@ -144,19 +146,22 @@ public class Main extends GameEngine implements EngineFrame{
 		rand = new Random();
 		balls = new Ball[MAX_BALLS];
 		p1 = new Rectangle(0,0,30,30);
+		debug = new DebugOverlay(this);
 	}
 	
-	int counter = 0;
+	public int counter = 0;
 	@Override
 	public void update() {
 		counter++;
 		if(counter >= rand.nextInt(15)){
-			spawnBall(rand.nextInt(3));
+			spawnBall(rand.nextInt(4));
 			counter = 0;
 		}
 		
 		mouseCalc();
 		updateBalls();
+		
+		debug.update();
 		
 		p1.setLocation(this.getWidth()-xPos, this.getHeight()-yPos);
 	}
@@ -165,13 +170,11 @@ public class Main extends GameEngine implements EngineFrame{
 	public void paint(Graphics g) {
 		super.paint(g); //Always call super.draw(g) first!
 		Color org = g.getColor();
-		Color gradColour = new Color(red,120,blue);
-		Color randColour = new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255));
-		g.setColor(randColour);
-		g.fillOval((int)p1.getX(), (int)p1.getY(), (int)p1.getWidth(), (int)p1.getHeight());
-		g.setColor(gradColour);
+		
+		g.setColor(new Color(red,120,blue));
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		g.setColor(randColour);
+		
+		g.setColor(new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
 		g.fillOval((int)p1.getX(), (int)p1.getY(), (int)p1.getWidth(), (int)p1.getHeight());
 		
 		for(Ball b : balls){
@@ -179,6 +182,7 @@ public class Main extends GameEngine implements EngineFrame{
 				b.paint(g);
 			}
 		}
+		debug.paint(g);
 		g.setColor(org);
 	}
 

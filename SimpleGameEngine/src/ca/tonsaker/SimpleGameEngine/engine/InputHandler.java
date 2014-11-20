@@ -25,7 +25,7 @@ public class InputHandler implements KeyListener{
      * @return Whether the key is pressed or not 
      */ 
     public boolean isKeyDown(int keyCode){ 
-        if (keyCode > 0 && keyCode < 256){ 
+        if (keyCode > 0 && keyCode < 256){
         	return keys[keyCode]; 
         }
         return false; 
@@ -37,7 +37,7 @@ public class InputHandler implements KeyListener{
      */ 
     public void keyPressed(KeyEvent e){ 
         if (e.getKeyCode() > 0 && e.getKeyCode() < 256){ 
-        	keys[e.getKeyCode()] = true; 
+        	keys[e.getKeyCode()] = true;
         } 
     } 
 
