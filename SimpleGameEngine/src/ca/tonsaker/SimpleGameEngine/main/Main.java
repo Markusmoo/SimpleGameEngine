@@ -169,13 +169,13 @@ public class Main extends GameEngine implements EngineFrame{
 		p1 = new Rectangle(0,0,30,30);
 		debug = new DebugOverlay(this);
 		filePath = new File(System.getenv("APPDATA")+"\\TonsakerGames\\DodgeBall");
-		try {
+		/*try { //TODO
 			DataManager.readFile(filePath);
 		} catch (FileNotFoundException e) {
 			DataManager.createFile(filePath);
 			highScore = 0;
 			DataManager.saveFile(filePath, highScore);
-		}
+		}*/
 	}
 	
 	public int counter = 0;
