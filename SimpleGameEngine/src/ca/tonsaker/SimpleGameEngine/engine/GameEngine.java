@@ -18,7 +18,6 @@ import javax.swing.Timer;
  */
 @SuppressWarnings("serial")
 public abstract class GameEngine extends JPanel implements EngineFrame {        
-        private boolean isRunning = true; 
         private int fps;
         private int ups;
         
@@ -56,13 +55,30 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 
 	        
     /** 
-	 * This method starts the game and runs it in a loop 
+	 * Starts FPS (Frames per Second) and UPS (Updates per something) loop.
 	 */ 
 	public void run(){ 
         init();
 		
 		fpsTimer.start();
 		upsTimer.start();
+	}
+	
+	/** 
+	 * Stops FPS (Frames per Second) and UPS (Updates per something) loop.
+	 */ 
+	public void stop(){
+		fpsTimer.stop();
+		upsTimer.stop();
+	}
+	
+	/**
+	 * Determines if the FPS (Frames per Second) and UPS (Updates per something) loops are running.
+	 * 
+	 * @return True if game engine is running.
+	 */
+	public boolean isRunning(){
+		return fpsTimer.isRunning();
 	}
 	
 	/**
@@ -101,6 +117,15 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 */
 	public int getFPS(){
 		return this.fps;
+	}
+	
+	/**
+	 * Gets the parent JFrame component that contains this JPanel
+	 * 
+	 * @return the parent JFrame component
+	 */
+	public JFrame getFrame(){
+		return this.frame;
 	}
 	
 	/**
