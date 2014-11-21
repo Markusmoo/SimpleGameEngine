@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
 
@@ -35,10 +37,14 @@ public class Main extends GameEngine implements EngineFrame{
 		main.run(); //Starts the update and drawing loop at the set FPS
 	}
 	
+	public File filePath;
+	
 	public DebugOverlay debug;
 	public boolean collisionTesting = true;
+	public boolean controlInvert = true;
 	
 	public long score = 0;
+	public static long highScore = 0;
 	
 	public Random rand;
 	public int xPos, yPos;
@@ -120,13 +126,18 @@ public class Main extends GameEngine implements EngineFrame{
 						}*/
 						//System.exit(0);
 						this.stop();
-						new GABEN(score);
+						DataManager.saveFile(filePath, highScore);
+						//new GABEN(score);
 					}
 				}
 				if(!this.contains(b.getLocation())){
 					System.out.println(b + " removed.");
 					balls[idx] = null;
 					numBalls--;
+					if(!debug.hasDebugged) score++;
+					if(score > highScore){
+						highScore = score;
+					}
 				}
 			}
 			idx++;
@@ -157,6 +168,14 @@ public class Main extends GameEngine implements EngineFrame{
 		balls = new Ball[MAX_BALLS];
 		p1 = new Rectangle(0,0,30,30);
 		debug = new DebugOverlay(this);
+		filePath = new File(System.getenv("APPDATA")+"\\TonsakerGames\\DodgeBall");
+		try {
+			DataManager.readFile(filePath);
+		} catch (FileNotFoundException e) {
+			DataManager.createFile(filePath);
+			highScore = 0;
+			DataManager.saveFile(filePath, highScore);
+		}
 	}
 	
 	public int counter = 0;
@@ -164,7 +183,6 @@ public class Main extends GameEngine implements EngineFrame{
 	public void update() {
 		counter++;
 		if(counter >= rand.nextInt(15)){
-			score++;
 			spawnBall(rand.nextInt(4));
 			counter = 0;
 		}
@@ -174,9 +192,12 @@ public class Main extends GameEngine implements EngineFrame{
 		
 		debug.update();
 		
-		setTitle(title+" Score: "+score);
-		
-		p1.setLocation(this.getWidth()-xPos, this.getHeight()-yPos);
+		setTitle(title+" Score: "+score+" HighScore: "+highScore);
+		if(controlInvert){
+			p1.setLocation(this.getWidth()-xPos, this.getHeight()-yPos);
+		}else{
+			p1.setLocation(xPos-(int)(p1.getWidth()/2), yPos-(int)(p1.getHeight()/2));
+		}
 	}
 	
 	@Override

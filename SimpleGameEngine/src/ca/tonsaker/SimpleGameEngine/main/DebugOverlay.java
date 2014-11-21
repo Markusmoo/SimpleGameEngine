@@ -13,6 +13,8 @@ public class DebugOverlay implements EngineFrame{
 	Main panel;
 	InputHandler input;
 	public boolean showing = false;
+	
+	public boolean hasDebugged = false;
 
 	public DebugOverlay(Main panel) {
 		this.panel = panel;
@@ -51,7 +53,8 @@ public class DebugOverlay implements EngineFrame{
 		}
 	}
 
-	private boolean canToggle = true;
+	private boolean canToggleCollision = true;
+	private boolean canToggleControlInvert = true;
 	@Override
 	public void update() {
 		if(input.isKeyDown(KeyEvent.VK_F3)){
@@ -59,8 +62,18 @@ public class DebugOverlay implements EngineFrame{
 		}else{
 			showing = false;
 		}
-		if(input.isKeyDown(KeyEvent.VK_F5)){
+		if(input.isKeyDown(KeyEvent.VK_F5) && canToggleCollision){
 			panel.collisionTesting = !panel.collisionTesting;
+			canToggleCollision = false;
+			hasDebugged = true;
+		}else if(!input.isKeyDown(KeyEvent.VK_F5)){
+			canToggleCollision = true;
+		}
+		if(input.isKeyDown(KeyEvent.VK_F6) && canToggleControlInvert){
+			panel.controlInvert = !panel.controlInvert;
+			canToggleControlInvert = false;
+		}else if(!input.isKeyDown(KeyEvent.VK_F6)){
+			canToggleControlInvert = true;
 		}
 	}
 
