@@ -219,7 +219,7 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	public void init(){ 
 		frame.setVisible(true);
 		setVisible(true);
-		input = new InputHandler(this);
+		input = new InputHandler(frame);
 		setDoubleBuffered(true);
 	}
 	

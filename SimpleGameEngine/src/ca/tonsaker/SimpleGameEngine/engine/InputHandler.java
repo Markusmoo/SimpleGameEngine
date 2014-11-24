@@ -16,7 +16,7 @@ public class InputHandler implements KeyListener{
      */ 
     public InputHandler(Component c){ 
     	keys = new boolean[256];
-    	c.addKeyListener(this); 
+    	c.addKeyListener(this);
     } 
     
     /** 
