@@ -5,14 +5,14 @@ import java.awt.Polygon;
 
 public class Triangle extends Polygon{
 	
-	int x1;
-	int y1;
+	public int x1;
+	public int y1;
 	
-	int x2;
-	int y2;
+	public int x2;
+	public int y2;
 	
-	int x3;
-	int y3;
+	public int x3;
+	public int y3;
 	
 	public Triangle(int x1, int y1, int x2, int y2, int x3, int y3){
 		super(new int[]{x1,x2,x3}, new int[]{y1,y2,y3}, 3);

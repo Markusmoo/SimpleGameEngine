@@ -1,4 +1,4 @@
-package ca.tonsaker.SimpleGameEngine.main;
+package ca.tonsaker.SimpleGameEngine.test;
 
 import java.awt.Graphics;
 
@@ -9,22 +9,22 @@ import ca.tonsaker.SimpleGameEngine.engine.graphics.Triangle;
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-public class Main extends GameEngine implements EngineFrame{
+public class TestMain extends GameEngine implements EngineFrame{
 	
-	public Main(int x, int y, int width, int height) {
+	public TestMain(int x, int y, int width, int height) {
 		super(x, y, width, height);
 		
 	}
 
-	public static void main(String[] args){
-		Main main = new Main(100,100,800,600); //Creates the JFrame at X,Y, and then sets the WIDTH and HEIGHT
+	/*public static void main(String[] args){
+		TestMain main = new TestMain(100,100,800,600); //Creates the JFrame at X,Y, and then sets the WIDTH and HEIGHT
 		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Sets the default close operation to erase all memory and close the Program
 		main.setResizable(false); //Disallows the parent JFrame to be resized
 		main.setTitle("SAMPLE TITLE"); //Changes the title of the parent JFrame
 		main.setFPS(60); //The FPS (Frames per second)
 		main.setUPS(30); //The UPS (Updates per second)
 		main.run(); //Starts the update and drawing loop at the set FPS
-	}
+	}*/
 	
 	@Override
 	public void init(){
@@ -37,14 +37,9 @@ public class Main extends GameEngine implements EngineFrame{
 		
 	}
 	
-	int x = 200;
-	
 	@Override
 	public void paint(Graphics g) {
-		super.paint(g); //Always call super.draw(g) first!
-		
-		g.fillPolygon(new Triangle(100,100,200,200,150,300));
-		
+		super.paint(g); //Always call super.draw(g) first!		
 		
 	}
 
