@@ -3,6 +3,7 @@ package ca.tonsaker.SimpleGameEngine.engine.util.network;
 import java.net.Socket;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class Client {
 
@@ -18,6 +19,7 @@ public class Client {
 	 */
 	private class Inport extends Thread{
 		private ObjectInputStream in;
+		private ObjectOutputStream out; //TODO
 		public void run(){
 			// Open the InputStream
 			try{
@@ -31,6 +33,11 @@ public class Client {
 			// Enter process loop
 			while(true){
 				// Sleep
+				try {
+					out.writeObject("Hello There"); //TODO
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 				try{
 					Thread.sleep(USER_THROTTLE);
 				}catch(Exception e){
