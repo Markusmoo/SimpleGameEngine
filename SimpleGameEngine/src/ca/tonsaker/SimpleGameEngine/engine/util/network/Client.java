@@ -24,6 +24,7 @@ public class Client {
 			// Open the InputStream
 			try{
 				in = new ObjectInputStream(socket.getInputStream());
+				out = new ObjectOutputStream(socket.getOutputStream());
 			}catch(IOException e){
 				System.out.println("Could not get input stream from "+toString());
 				return;
