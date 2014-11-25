@@ -9,7 +9,7 @@ import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
 import ca.tonsaker.SimpleGameEngine.engine.InputHandler;
 
 
-public class DebugOverlay implements EngineFrame{
+public class DebugOverlay{
 	
 	GameEngine panel;
 	InputHandler input;
@@ -20,9 +20,6 @@ public class DebugOverlay implements EngineFrame{
 		this.panel = panel;
 		this.input = new InputHandler(panel.getFrame());
 	}
-
-	@Override
-	public void init() {}
 	
 	public void setDebugScreenToggable(boolean on){
 		toggle = on;
@@ -32,18 +29,21 @@ public class DebugOverlay implements EngineFrame{
 		return toggle;
 	}
 
-	@Override
-	public void paint(Graphics g) {
+	public void debugText(Graphics g, String text, Color col, int index) {
+		if(index <= 0) index = 1;
 		if(showing){
 			Color org = g.getColor();
-			
+			g.setColor(Color.blue);
+			g.drawString("Game created with SimpleGameEngine by Markus Tonsaker", 15, 20); //TODO Make this not overlap
+			g.setColor(org);
+			if(col != null) g.setColor(col);
+			g.drawString(text, 15, (20*index)+20);
 			g.setColor(org);
 		}
 	}
 
 	private boolean canToggle = false; 
 	
-	@Override
 	public void update() {
 		if(!toggle){
 			if(input.isKeyDown(KeyEvent.VK_F3)){

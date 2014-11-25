@@ -1,5 +1,6 @@
 package ca.tonsaker.SimpleGameEngine.test;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
@@ -44,7 +45,8 @@ public class TestMain extends GameEngine implements EngineFrame{
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g); //Always call super.draw(g) first!		
-		debug.paint(g);
+		debug.debugText(g, "!This is some sample debug text", Color.red, 1);
+		debug.debugText(g, "!This is some sample debug text", Color.orange, 2);
 	}
 
 }
