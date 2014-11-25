@@ -33,12 +33,6 @@ public class Client {
 			System.out.println(socket+" has connected input.");
 			// Enter process loop
 			while(true){
-				// Sleep
-				try {
-					out.writeObject("Hello There"); //TODO
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
 				try{
 					Thread.sleep(USER_THROTTLE);
 				}catch(Exception e){

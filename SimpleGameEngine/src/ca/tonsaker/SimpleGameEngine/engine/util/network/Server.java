@@ -25,6 +25,7 @@ public class Server extends Thread{
 			// Open the InputStream
 			try{
 				in = new ObjectInputStream(socket.getInputStream());
+				out = new ObjectOutputStream(socket.getOutputStream());
 			}catch(IOException e){
 				System.out.println("Could not get input stream from "+toString());
 				return;
@@ -34,13 +35,9 @@ public class Server extends Thread{
 			// Enter process loop
 			while(true){
 				// Sleep
+				System.out.println("Running");
 				try {
-					try {
-						System.out.println(in.readObject());
-					} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} //TODO
+					out.writeObject("Hello");
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
