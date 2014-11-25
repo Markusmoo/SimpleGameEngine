@@ -2,11 +2,16 @@ package ca.tonsaker.SimpleGameEngine.test;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
 import ca.tonsaker.SimpleGameEngine.engine.graphics.Triangle;
 import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
+import ca.tonsaker.SimpleGameEngine.engine.util.network.Client;
+import ca.tonsaker.SimpleGameEngine.engine.util.network.Server;
 
 import javax.swing.JFrame;
 
@@ -14,6 +19,8 @@ import javax.swing.JFrame;
 public class TestMain extends GameEngine implements EngineFrame{
 	
 	DebugOverlay debug;
+	Client client;
+	Server server;
 	
 	public TestMain(int x, int y, int width, int height) {
 		super(x, y, width, height);
@@ -35,6 +42,15 @@ public class TestMain extends GameEngine implements EngineFrame{
 		super.init(); //Always call super.init() first!
 		
 		debug = new DebugOverlay(this);
+		
+		try {
+			server = new Server();
+			client = new Client(new Socket(InetAddress.getLocalHost(), 30480));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println(client.isConnected());
+		server.run();
 	}
 	
 	@Override

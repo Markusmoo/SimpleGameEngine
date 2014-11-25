@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
-import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
 import ca.tonsaker.SimpleGameEngine.engine.InputHandler;
 
@@ -34,7 +33,7 @@ public class DebugOverlay{
 		if(showing){
 			Color org = g.getColor();
 			g.setColor(Color.blue);
-			g.drawString("Game created with SimpleGameEngine by Markus Tonsaker", 15, 20); //TODO Make this not overlap
+			g.drawString("Game created with SimpleGameEngine by Markus Tonsaker", 15, 20);
 			g.setColor(org);
 			if(col != null) g.setColor(col);
 			g.drawString(text, 15, (20*index)+20);
