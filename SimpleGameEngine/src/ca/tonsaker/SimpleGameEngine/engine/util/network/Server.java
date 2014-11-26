@@ -2,110 +2,61 @@ package ca.tonsaker.SimpleGameEngine.engine.util.network;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
 public class Server extends Thread{
-
-	private static final int SERVER_PORT = 30480;
-	private static final int ROOM_THROTTLE = 200;
+	
 	private ServerSocket serverSocket;
-	private InetAddress hostAddress;
-	private Socket socket;
-	private ArrayList<Client> users = new ArrayList<Client>();
+	private Socket clientSocket;
+	private BufferedReader bufferedReader;
+	private String inputLine;
+	private int port = 63400;
 	
-	private class Inport extends Thread{
-		private ObjectInputStream in;
-		private ObjectOutputStream out; //TODO
-		public void run(){
-			// Open the InputStream
-			try{
-				in = new ObjectInputStream(socket.getInputStream());
-				out = new ObjectOutputStream(socket.getOutputStream());
-			}catch(IOException e){
-				System.out.println("Could not get input stream from "+toString());
-				return;
-			}
-			// Announce
-			System.out.println(socket+" has connected input.");
-			// Enter process loop
-			while(true){
-				// Sleep
-				System.out.println("Running");
-				try {
-					out.writeObject("Hello");
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				try{
-					Thread.sleep(ROOM_THROTTLE);
-				}catch(Exception e){
-					System.out.println(toString()+" has input interrupted.");
-				}
-			}
-		}
-	}
+	private ArrayList<Client> clients = new ArrayList<Client>();
 	
-	/**
-	 * Creates a new server room for clients to connect to.
-	 */
-	public Server(){
-		// Attempt to get the host address
+	private boolean isRunning = false;
+	
+	public Server(int port){
 		try{
-			hostAddress = InetAddress.getLocalHost();
-		}catch(UnknownHostException e){
-			System.out.println("Could not get the host address.");
-			return;
-		}
-		// Announce the host address
-		System.out.println("Server host address is: "+hostAddress);
-		// Attempt to create server socket
-		try{
-			serverSocket = new ServerSocket(SERVER_PORT,0,hostAddress);
+			if(port != 0) this.port = port;
+			serverSocket = new ServerSocket(this.port);
+			clientSocket = serverSocket.accept();
+			bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+			this.run();
 		}catch(IOException e){
-			System.out.println("Could not open server socket.");
-			return;
+			System.out.println(e);
 		}
-		// Announce the socket creation
-		System.out.println("Socket "+serverSocket+" created.");
 	}
-	/**
-	 * Starts the client accepting process.
-	 */
-	public void run(){
-		// Announce the starting of the process
-		System.out.println("Room has been started.");
-		// Enter the main loop
-		while(true){
-			// Remove all disconnected clients
-			for(int i = 0;i < users.size();i++){
-				// Check connection, remove on dead
-				if(!users.get(i).isConnected()){
-					System.out.println(users.get(i)+" removed due to lack of connection.");
-					users.remove(i);
-				}
-			}
-			// Get a client trying to connect
-			try{
-				socket = serverSocket.accept();
-			}
-			catch(IOException e){
-				System.out.println("Could not get a client.");
-			}
-			// Client has connected
-			System.out.println("Client "+socket+" has connected.");
-			// Add user to list
-			users.add(new Client(socket));
-			// Sleep
-			try{
-				Thread.sleep(ROOM_THROTTLE);
-			}catch(InterruptedException e){
-				System.out.println("Room has been interrupted.");
-			}
+	
+	public boolean stopServer(){
+		isRunning = false;
+		try {
+			this.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			return false;
 		}
-	}	
+		return true;
+	}
+	
+	public boolean startServer(){
+		this.run();
+		return true;
+	}
+	
+	public void run(){
+		isRunning = true;
+		while(isRunning){
+			try {
+				inputLine = bufferedReader.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			if(inputLine != null) System.out.println(inputLine);
+		}
+	}
 }
+
