@@ -43,13 +43,15 @@ public class TestMain extends GameEngine implements EngineFrame{
 		
 		debug = new DebugOverlay(this);
 		
-		try {
-			server = new Server();
-			client = new Client(new Socket(InetAddress.getLocalHost(), 30480));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println(client.isConnected());
+		//try {
+			//server = new Server(30480);
+			//client = new Client(new Socket(InetAddress.getLocalHost(), 30480));
+			//server = new Server();
+			client = new Client("localhost", 3048);
+		//} catch (IOException e) {
+			//e.printStackTrace();
+		//}
+		//System.out.println(client.isConnected());
 		server.run();
 	}
 	

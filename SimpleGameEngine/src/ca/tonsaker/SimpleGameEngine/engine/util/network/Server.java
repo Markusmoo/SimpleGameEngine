@@ -1,62 +1,54 @@
 package ca.tonsaker.SimpleGameEngine.engine.util.network;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
+
+import ca.tonsaker.SimpleGameEngine.test.DataTest;
 
 public class Server extends Thread{
 	
-	private ServerSocket serverSocket;
-	private Socket clientSocket;
-	private BufferedReader bufferedReader;
-	private String inputLine;
-	private int port = 63400;
+	ServerSocket serverSocket;
+	ObjectInputStream in;
+	ObjectOutputStream out;
+	Socket clientSocket;
 	
-	private ArrayList<Client> clients = new ArrayList<Client>();
 	
-	private boolean isRunning = false;
-	
-	public Server(int port){
-		try{
-			if(port != 0) this.port = port;
-			serverSocket = new ServerSocket(this.port);
-			clientSocket = serverSocket.accept();
-			bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			this.run();
-		}catch(IOException e){
-			System.out.println(e);
-		}
-	}
-	
-	public boolean stopServer(){
-		isRunning = false;
-		try {
-			this.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-	
-	public boolean startServer(){
-		this.run();
-		return true;
-	}
-	
-	public void run(){
-		isRunning = true;
-		while(isRunning){
-			try {
-				inputLine = bufferedReader.readLine();
+    public Server(){
+        try {
+            serverSocket = new ServerSocket(4441);
+        } catch (IOException e) {
+            System.err.println("Could not listen on port");
+            System.exit(1);
+        }
+
+        try {
+            clientSocket = serverSocket.accept();
+            System.out.println("Connected");
+            
+            out = new ObjectOutputStream(clientSocket.getOutputStream());
+            in = new ObjectInputStream(clientSocket.getInputStream()); 
+        } catch (IOException e) {
+            System.err.println("Accept failed.");
+            System.exit(1);
+        }
+
+        DataTest go;
+        while (true) {      
+            try {
+				go = (DataTest) in.readObject();
+				System.out.println( go.x + " " + go.y + " " + go.string );
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			if(inputLine != null) System.out.println(inputLine);
-		}
-	}
+        }
+    }
+    
+    public void run(){
+    	
+    }
 }
-
