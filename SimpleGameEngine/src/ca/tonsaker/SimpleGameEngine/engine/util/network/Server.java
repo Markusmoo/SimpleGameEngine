@@ -13,9 +13,10 @@ public class Server extends Thread{
 	DataOutputStream out;
 	Socket clientSocket;
 	
-    public Server(){
+    public Server(int port){
         try {
-            serverSocket = new ServerSocket(4441);
+            serverSocket = new ServerSocket(port);
+            System.out.println("Running server on port "+port);
         } catch (IOException e) {
             System.err.println("Could not listen on port");
             System.exit(1);
@@ -26,7 +27,9 @@ public class Server extends Thread{
             System.out.println("Connected");
             
             out = new DataOutputStream(clientSocket.getOutputStream());
-            in = new DataInputStream(clientSocket.getInputStream()); 
+            in = new DataInputStream(clientSocket.getInputStream());
+            
+            this.run();
         } catch (IOException e) {
         	e.printStackTrace();
         } finally {
@@ -44,9 +47,10 @@ public class Server extends Thread{
     public void run(){
     	while (true) {      
            try {
-			System.out.println(in.readUTF());
+        	String line = in.readUTF();
+        	if(line != null) System.out.println(line);
 		} catch (IOException e) {
-			e.printStackTrace();
+			//TODO ERRRRRRRRRRRRRORS
 		}
         }
     }
