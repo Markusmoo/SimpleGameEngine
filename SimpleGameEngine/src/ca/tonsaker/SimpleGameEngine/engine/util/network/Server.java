@@ -1,20 +1,17 @@
 package ca.tonsaker.SimpleGameEngine.engine.util.network;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import ca.tonsaker.SimpleGameEngine.test.DataTest;
 
 public class Server extends Thread{
 	
 	ServerSocket serverSocket;
-	ObjectInputStream in;
-	ObjectOutputStream out;
+	DataInputStream in;
+	DataOutputStream out;
 	Socket clientSocket;
-	
 	
     public Server(){
         try {
@@ -28,27 +25,29 @@ public class Server extends Thread{
             clientSocket = serverSocket.accept();
             System.out.println("Connected");
             
-            out = new ObjectOutputStream(clientSocket.getOutputStream());
-            in = new ObjectInputStream(clientSocket.getInputStream()); 
+            out = new DataOutputStream(clientSocket.getOutputStream());
+            in = new DataInputStream(clientSocket.getInputStream()); 
         } catch (IOException e) {
-            System.err.println("Accept failed.");
-            System.exit(1);
-        }
-
-        DataTest go;
-        while (true) {      
-            try {
-				go = (DataTest) in.readObject();
-				System.out.println( go.x + " " + go.y + " " + go.string );
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-        }
+        	e.printStackTrace();
+        } finally {
+        	try{
+	        	if(out != null) out.close();
+	            if(in != null) in.close();
+	            if(serverSocket != null) serverSocket.close();
+        	}catch(IOException e){
+        		System.err.println("Failed to close "+e.getClass().toString());
+        		e.printStackTrace();
+        	}
+        }  
     }
     
     public void run(){
-    	
+    	while (true) {      
+           try {
+			System.out.println(in.readUTF());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        }
     }
 }
