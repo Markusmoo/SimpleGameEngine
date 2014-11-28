@@ -19,20 +19,14 @@ public class Client extends Thread{
         try {
             clientSocket = new Socket(host, port);
             out = new PrintWriter(clientSocket.getOutputStream(), true); // Stuff to send to server
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream())); // Stuff server sends
+            //in = new BufferedReader(new InputStreamReader(new InputStream()))); // Stuff server sends
+            this.start();
         } catch (UnknownHostException e) {
             System.err.println("Unknown host");
             e.printStackTrace();
         } catch (IOException e) {
             System.err.println("Couldn't get I/O");
             e.printStackTrace();
-        } finally {
-        	try { //TODO
-				in.close();
-				out.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
         }
     }
     
@@ -41,15 +35,16 @@ public class Client extends Thread{
     }
     
     public void run(){
-    	String line;
+    	/*String line;
     	try{
+    		System.out.println("Getting Server Input");
     		while ((line = in.readLine()) != null) {
         		if(line != null) System.out.println(line);
         		//TODO
     		}
     		clientSocket.close();
         }catch(IOException e){
-        	System.err.println("Failed to get client input");
-        }
+        	System.err.println("Failed to get server input");
+        }*/
     }
 }

@@ -5,16 +5,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Server extends Thread{
 	
 	private class ServerInput extends Thread{
 		
 		Socket socket;
+		BufferedReader in;
 		
 		public ServerInput(Socket socket){
 			this.socket = socket;
 			System.out.println("Client "+socket.getInetAddress()+":"+socket.getPort()+" connected");
+			this.start();
 		}
 		
 		public void run(){
@@ -34,15 +37,14 @@ public class Server extends Thread{
 	}
 	
 	ServerSocket serverSocket;
-	BufferedReader in;
-	//DataOutputStream out;
-	Socket clientSocket;
+	ArrayList<Socket> sockets = new ArrayList<Socket>();
+	ArrayList<ServerInput> inputs = new ArrayList<ServerInput>();
 	
     public Server(int port){
         try {
             serverSocket = new ServerSocket(port);
             System.out.println("Running server(IP:"+serverSocket.getInetAddress().getHostAddress()+" Port:"+port+")");
-            this.run();
+            this.start();
         } catch (IOException e) {
             System.err.println("Could not listen on port");
             //TODO
@@ -57,7 +59,8 @@ public class Server extends Thread{
     	while(true){
     		try {
 				Socket socket = serverSocket.accept();
-				new ServerInput(socket).start();
+				inputs.add(new ServerInput(socket));
+				sockets.add(socket);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

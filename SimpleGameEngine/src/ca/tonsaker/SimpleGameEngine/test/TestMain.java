@@ -53,13 +53,14 @@ public class TestMain extends GameEngine implements EngineFrame{
 			//e.printStackTrace();
 		//}
 		//System.out.println(client.isConnected());
-		//server.run();
+		System.out.println("Hi");
 	}
 	
 	@Override
 	public void update() {
-		debug.update(); 
+		debug.update();
 		if(input.isKeyDown(KeyEvent.VK_SPACE)){
+			//System.out.println("Space");
 			client.sendCommand("Hello buddy");
 		}
 	}
