@@ -2,9 +2,11 @@ package ca.tonsaker.SimpleGameEngine.test;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
@@ -43,21 +45,23 @@ public class TestMain extends GameEngine implements EngineFrame{
 		
 		debug = new DebugOverlay(this);
 		
-		//try {
+		//client = new Client(new Socket(InetAddress.getLocalHost(), 3048));
+			//server = new Server(InetAddress.getLocalHost(), 3048, 5);
 			//server = new Server(30480);
-			//client = new Client(new Socket(InetAddress.getLocalHost(), 30480));
-			server = new Server(3048);
-			//client = new Client("localhost", 3048);
+			client = new Client("localhost", 30480, "MarkusClient");
 		//} catch (IOException e) {
 			//e.printStackTrace();
 		//}
 		//System.out.println(client.isConnected());
-		server.run();
+		//server.run();
 	}
 	
 	@Override
 	public void update() {
-		debug.update();
+		debug.update(); 
+		if(input.isKeyDown(KeyEvent.VK_SPACE)){
+			client.sendCommand("Hello buddy");
+		}
 	}
 	
 	@Override
