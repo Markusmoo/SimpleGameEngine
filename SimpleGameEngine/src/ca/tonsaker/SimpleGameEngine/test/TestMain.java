@@ -45,15 +45,11 @@ public class TestMain extends GameEngine implements EngineFrame{
 		
 		debug = new DebugOverlay(this);
 		
-		//client = new Client(new Socket(InetAddress.getLocalHost(), 3048));
-			//server = new Server(InetAddress.getLocalHost(), 3048, 5);
-			//server = new Server(30480);
-			client = new Client("localhost", 30480, "MarkusClient");
-		//} catch (IOException e) {
-			//e.printStackTrace();
-		//}
-		//System.out.println(client.isConnected());
-		System.out.println("Hi");
+		//server = new Server(InetAddress.getLocalHost(), 3048, 5);
+		server = new Server(30480);
+		client = new Client("localhost", 30480, "MarkusClient");
+		
+		System.out.println("Finished INIT");
 	}
 	
 	@Override

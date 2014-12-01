@@ -59,6 +59,8 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 */ 
 	public void run(){ 
         init();
+        repaint();
+        update();
 		
 		fpsTimer.start();
 		upsTimer.start();
