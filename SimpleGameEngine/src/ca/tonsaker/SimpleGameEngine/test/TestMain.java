@@ -7,15 +7,18 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.rmi.server.ServerRef;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
 import ca.tonsaker.SimpleGameEngine.engine.graphics.Triangle;
 import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
-import ca.tonsaker.SimpleGameEngine.engine.util.network.Client;
-import ca.tonsaker.SimpleGameEngine.engine.util.network.Server;
 
 import javax.swing.JFrame;
+
+import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryo.Kryo;
 
 @SuppressWarnings("serial")
 public class TestMain extends GameEngine implements EngineFrame{
@@ -44,10 +47,14 @@ public class TestMain extends GameEngine implements EngineFrame{
 		super.init(); //Always call super.init() first!
 		
 		debug = new DebugOverlay(this);
-		
 		//server = new Server(InetAddress.getLocalHost(), 3048, 5);
-		server = new Server(30480);
-		client = new Client("localhost", 30480, "MarkusClient");
+		server = new Server();
+		try {
+			server.start();
+			server.bind(30480);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		System.out.println("Finished INIT");
 	}
@@ -56,8 +63,8 @@ public class TestMain extends GameEngine implements EngineFrame{
 	public void update() {
 		debug.update();
 		if(input.isKeyDown(KeyEvent.VK_SPACE)){
-			//System.out.println("Space");
-			client.sendCommand("Hello buddy");
+			System.out.println("Hi and welcome to the server!");
+			server.sendToAllTCP("Hi and welcome to the server!");
 		}
 	}
 	
