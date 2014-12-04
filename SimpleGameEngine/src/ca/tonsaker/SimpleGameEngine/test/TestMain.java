@@ -16,6 +16,8 @@ import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
 
 import javax.swing.JFrame;
 
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryo.Kryo;
@@ -48,10 +50,32 @@ public class TestMain extends GameEngine implements EngineFrame{
 		
 		debug = new DebugOverlay(this);
 		//server = new Server(InetAddress.getLocalHost(), 3048, 5);
-		server = new Server();
-		try {
+		
+		try {	
+			/*
+			server = new Server();
 			server.start();
 			server.bind(30480);
+			server.addListener(new Listener(){
+				
+				public void received(Connection connection, Object object){
+					System.out.println(connection.getID() + " sent msg: "+object.toString());
+				}
+				
+			});
+			*/
+			Client client = new Client();
+		    client.start();
+		    client.connect(5000, "localhost", 30480);
+
+		    client.addListener(new Listener() {
+		        public void received (Connection connection, Object object) {
+		        	System.out.println(connection.getID() + " says " + object.toString());
+		        }
+		     });
+		    
+		    client.sendTCP("Here is the request");
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
