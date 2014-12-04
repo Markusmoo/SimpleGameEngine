@@ -11,12 +11,12 @@ public class DataTest implements Serializable{
 	
 	public int x;
 	public int y;
-	public String string;
+	public int currentClient;
 	
-	public DataTest(int x, int y, String string) {
+	public DataTest(int x, int y, int clientID) {
 		this.x = x;
 		this.y = y;
-		this.string = string;
+		this.currentClient = clientID;
 	}
 
 }

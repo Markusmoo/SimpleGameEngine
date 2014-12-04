@@ -1,6 +1,7 @@
 package ca.tonsaker.SimpleGameEngine.engine;
 
 import java.awt.Component; 
+import java.awt.Point;
 import java.awt.event.*; 
 
 /** 
@@ -9,6 +10,19 @@ import java.awt.event.*;
 public class InputHandler implements KeyListener{
 	
 	private boolean[] keys;
+	Component comp;
+	
+	public Point getMousePos(){
+		return comp.getMousePosition();
+	}
+	
+	public double getMouseX(){
+		return comp.getMousePosition().getX();
+	}
+	
+	public double getMouseY(){
+		return comp.getMousePosition().getY();
+	}
 	
     /** 
      * Assigns the newly created InputHandler to a Component 
@@ -17,6 +31,7 @@ public class InputHandler implements KeyListener{
     public InputHandler(Component c){ 
     	keys = new boolean[256];
     	c.addKeyListener(this);
+    	comp = c;
     } 
     
     /** 
