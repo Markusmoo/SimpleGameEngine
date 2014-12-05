@@ -44,13 +44,52 @@ public class Sprite implements EngineFrame{
 
 	@Override
 	public void paint(Graphics g) {
-		g.drawImage(image, x, y, width, height, null);
+		//g.drawImage(image, x, y, width, height, null);
+		g.fillOval(x,y,30,30); //TODO debug
 	}
 
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void move(double degree, int speed){
+		if(degree < 45.0 && degree > 0){
+			y+=speed;
+			degree = Math.toRadians(degree);
+			x+=Math.round(1/Math.tan(degree));
+		}else if(degree == 45.0){
+			x+=speed;
+			y+=speed;
+		}else if(degree > 45.0 && degree < 90.0){
+			
+		}
+	}
+	
+	public void moveAmount(int x, int y){
+		this.x+=x;
+		this.y+=y;
+	}
+	
+	/**
+	 * @deprecated
+	 * 
+	 * @param widthPercent
+	 * @param heightPercent
+	 */
+	public void scale(double widthPercent, double heightPercent){
+		//TODO
+	}
+	
+	/**
+	 * @deprecated
+	 * 
+	 * @param width
+	 * @param height
+	 */
+	public void scale(int width, int height){
+		//TODO
 	}
 	
 	public Point getPosition(){

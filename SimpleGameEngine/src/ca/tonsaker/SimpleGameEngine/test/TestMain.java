@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
+import ca.tonsaker.SimpleGameEngine.engine.graphics.Sprite;
 import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
 
 import javax.swing.JFrame;
@@ -43,18 +44,24 @@ public class TestMain extends GameEngine implements EngineFrame{
 	public void init(){
 		super.init(); //Always call super.init() first!
 		debug = new DebugOverlay(this);
-		
+		sprite = new Sprite(100, 100, "icon_64x64.png");
 	}
+	
+	Sprite sprite;
 	
 	@Override
 	public void update() {
+		double degree = 22.5;
 		debug.update();
-		
+		sprite.move(degree, 1); //TODO debug
+		this.setTitle("x+="+Math.round(1/Math.tan(Math.toRadians(degree))));  //Math.round(1*Math.atan(11.25))));
 	}
 	
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g); //Always call super.draw(g) first!
+		sprite.paint(g);
+		g.drawLine(0, 0, this.getHeight(), this.getHeight());
 		debug.debugText(g, "!This is some sample debug text", Color.red, 1);
 		debug.debugText(g, "!This is some sample debug text", Color.orange, 2);
 	}
