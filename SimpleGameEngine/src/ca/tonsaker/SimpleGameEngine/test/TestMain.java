@@ -1,5 +1,6 @@
 package ca.tonsaker.SimpleGameEngine.test;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -41,78 +42,21 @@ public class TestMain extends GameEngine implements EngineFrame{
 	@Override
 	public void init(){
 		super.init(); //Always call super.init() first!
-		
 		debug = new DebugOverlay(this);
 		
-		try {	
-			///*
-			server = new Server();
-			server.start();
-			server.getKryo().register(Point.class);
-			server.bind(30480);
-			server.addListener(new Listener(){
-				
-				public void connected(Connection connection){
-					System.out.println("Client "+connection.getID()+" CONNECTED");
-				}
-				
-			});
-			//*/
-			/*
-			Client client = new Client();
-		    client.start();
-		    client.getKryo().register(Point.class);
-		    client.connect(5000, "10.18.10.54", 30480);
-
-		    client.addListener(new Listener() {
-		        public void received (Connection connection, Object object) {
-		        	if(object instanceof Point){
-		        		point = (Point) object;
-		        	}
-		        }
-		     });
-			*/
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		point = new Point(0,600);
-		
-		System.out.println("Finished INIT");
 	}
-	
-	Point point;
-	boolean moveRight = true;
 	
 	@Override
 	public void update() {
 		debug.update();
-		this.setTitle(Integer.toString(point.x));
-		if(moveRight && input.isKeyDown(KeyEvent.VK_SPACE)){
-			point.x+=10;
-			
-		}else if(input.isKeyDown(KeyEvent.VK_SPACE)){
-			point.x-=10;
-		}
-		
-		if(point.x > (server.getConnections().length*this.getWidth())){
-			moveRight = false;
-		}else if(point.x <= 0){
-			moveRight = true;
-		}
-		for(Connection id : server.getConnections()){
-			Point p = new Point(point.x-id.getID()*this.getWidth(), point.y);
-			server.sendToTCP(id.getID(), p);
-		}
 		
 	}
 	
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g); //Always call super.draw(g) first!
-		//g.fillOval(point.x, point.y, 30, 30);
-		//debug.debugText(g, "!This is some sample debug text", Color.red, 1);
-		//debug.debugText(g, "!This is some sample debug text", Color.orange, 2);
+		debug.debugText(g, "!This is some sample debug text", Color.red, 1);
+		debug.debugText(g, "!This is some sample debug text", Color.orange, 2);
 	}
 
 }

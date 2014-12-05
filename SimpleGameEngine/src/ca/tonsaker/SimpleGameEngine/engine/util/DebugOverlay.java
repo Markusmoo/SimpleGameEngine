@@ -36,7 +36,7 @@ public class DebugOverlay{
 			g.drawString("Game created with SimpleGameEngine by Markus Tonsaker", 15, 20);
 			g.setColor(org);
 			if(col != null) g.setColor(col);
-			g.drawString(text, 15, (20*index)+20);
+			g.drawString(text, 15, (17*index)+20);
 			g.setColor(org);
 		}
 	}
