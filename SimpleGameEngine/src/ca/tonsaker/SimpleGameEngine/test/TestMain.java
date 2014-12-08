@@ -2,9 +2,6 @@ package ca.tonsaker.SimpleGameEngine.test;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.io.IOException;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
@@ -13,8 +10,6 @@ import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
 
 import javax.swing.JFrame;
 
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.kryonet.Client;
 
@@ -44,17 +39,17 @@ public class TestMain extends GameEngine implements EngineFrame{
 	public void init(){
 		super.init(); //Always call super.init() first!
 		debug = new DebugOverlay(this);
-		sprite = new Sprite(100, 100, "icon_64x64.png");
+		sprite = new Sprite(100, 100, "C:/Users/739256/Pictures/icon_64x64.png");
 	}
 	
 	Sprite sprite;
 	
 	@Override
 	public void update() {
-		double degree = 22.5;
+		//double degree = 22.5;
 		debug.update();
-		sprite.move(degree, 1); //TODO debug
-		this.setTitle("x+="+Math.round(1/Math.tan(Math.toRadians(degree))));  //Math.round(1*Math.atan(11.25))));
+		//sprite.move(degree, 1); //TODO debug
+		//this.setTitle("x+="+Math.round(1/Math.tan(Math.toRadians(degree))));  //Math.round(1*Math.atan(11.25))));
 	}
 	
 	@Override

@@ -3,7 +3,8 @@ package ca.tonsaker.SimpleGameEngine.engine.graphics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
+import java.io.File;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
@@ -13,7 +14,7 @@ public class Sprite implements EngineFrame{
 	
 	int x, y;
 	int width, height;
-	BufferedImage image;
+	BufferedImage spriteImage;
 	
 	public Sprite(int x, int y, int width, int height, String file){
 		this.setPosition(x, y);
@@ -25,15 +26,29 @@ public class Sprite implements EngineFrame{
 	public Sprite(int x, int y, String file){
 		this.setPosition(x, y);
 		this.setImage(file);
-		this.setWidth(image.getWidth());
-		this.setHeight(image.getHeight());
+		this.setWidth(spriteImage.getWidth());
+		this.setHeight(spriteImage.getHeight());
+	}
+	
+	public Sprite(int x, int y, BufferedImage img){
+		this.setPosition(x, y);
+		this.setImage(img);
+		this.setWidth(spriteImage.getWidth());
+		this.setHeight(spriteImage.getHeight());
 	}
 	
 	public Sprite(String file){
 		this.setPosition(0, 0);
 		this.setImage(file);
-		this.setWidth(image.getWidth());
-		this.setHeight(image.getHeight());
+		this.setWidth(spriteImage.getWidth());
+		this.setHeight(spriteImage.getHeight());
+	}
+	
+	public Sprite(BufferedImage img){
+		this.setPosition(0, 0);
+		this.setImage(img);
+		this.setWidth(spriteImage.getWidth());
+		this.setHeight(spriteImage.getHeight());
 	}
 
 	@Override
@@ -44,8 +59,8 @@ public class Sprite implements EngineFrame{
 
 	@Override
 	public void paint(Graphics g) {
-		//g.drawImage(image, x, y, width, height, null);
-		g.fillOval(x,y,30,30); //TODO debug
+		//g.drawImage(spriteImage, x, y, width, height, null);
+		g.drawImage(spriteImage, x, y, null);
 	}
 
 	@Override
@@ -113,7 +128,7 @@ public class Sprite implements EngineFrame{
 	}
 	
 	public BufferedImage getImage(){
-		return image;
+		return spriteImage;
 	}
 	
 	public void setPosition(int x, int y){
@@ -134,7 +149,7 @@ public class Sprite implements EngineFrame{
 	}
 	
 	public void setWidth(int width){
-		if(image != null){
+		if(spriteImage != null){
 			//TODO Scale image
 		}else{
 			this.width = width;
@@ -142,26 +157,22 @@ public class Sprite implements EngineFrame{
 	}
 
 	public void setHeight(int height){
-		if(image != null){
+		if(spriteImage != null){
 			//TODO Scale image
 		}else{
 			this.height = height;
 		}
 	}
 	
-	public void setImage(String file){
-		FileInputStream inputStream = null;
-		try{
-			inputStream = new FileInputStream(file);
-			this.image = ImageIO.read(inputStream);
-		} catch(Exception e) {
+	public void setImage(String filePath){
+		try {
+			this.spriteImage = ImageIO.read(new File(filePath));
+		} catch (IOException e) {
 			e.printStackTrace();
-	   	}finally{
-	    	try {
-	    		if(inputStream != null) inputStream.close();
-	    	}catch(Exception e) {
-	        	e.printStackTrace();
-	        }
-	    }
+		}
+	}
+	
+	public void setImage(BufferedImage image){
+		this.spriteImage = image;
 	}
 }
