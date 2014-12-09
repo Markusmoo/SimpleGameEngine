@@ -7,5 +7,6 @@
 			<attribute name="javadoc_location" value="file:/Z:/git/SimpleGameEngine/SimpleGameEngine/lib/javadoc/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/imgscalr-lib-4.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

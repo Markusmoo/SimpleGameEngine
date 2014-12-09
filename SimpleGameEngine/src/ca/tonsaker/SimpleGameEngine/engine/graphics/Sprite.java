@@ -5,16 +5,24 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import javax.imageio.ImageIO;
 
+import org.imgscalr.Scalr;
+
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 
+
+//TODO Add missing texture, scales accordingly
 public class Sprite implements EngineFrame{
 	
 	int x, y;
 	int width, height;
 	BufferedImage spriteImage;
+	
+	Queue<String> moveTo = new LinkedList<String>();
 	
 	public Sprite(int x, int y, int width, int height, String file){
 		this.setPosition(x, y);
@@ -59,17 +67,55 @@ public class Sprite implements EngineFrame{
 
 	@Override
 	public void paint(Graphics g) {
-		//g.drawImage(spriteImage, x, y, width, height, null);
 		g.drawImage(spriteImage, x, y, null);
 	}
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-		
+		moveToUpdate();
 	}
 	
-	public void move(double degree, int speed){
+	private int moveToX = 0;
+	private int moveToY = 0;
+	private int currentMoveToXSpeed = 0;
+	private int currentMoveToYSpeed = 0;
+	private float moveToSpeed = 0.0f;
+	private boolean moveToReady = true;
+	private void moveToUpdate(){
+		if(!moveTo.isEmpty()){
+			if(moveToReady){
+				String info = moveTo.remove();
+				moveToX = Integer.parseInt(info.substring(0, info.indexOf(':')));
+				moveToY = Integer.parseInt(info.substring(info.indexOf(':')+1, info.lastIndexOf(':')));
+				moveToSpeed = Float.parseFloat(info.substring(info.lastIndexOf(':')+1));
+				moveToReady = false;
+			}
+			
+			if(this.x != moveToX){
+				currentMoveToXSpeed += moveToSpeed;
+				if(currentMoveToXSpeed >= 1.0f){
+					this.moveAmount(1, 0);
+					currentMoveToXSpeed -= 1.0f;
+				}
+			}
+			if(this.y != moveToY){
+				currentMoveToYSpeed += moveToSpeed;
+				if(currentMoveToYSpeed >= 1.0f){
+					this.moveAmount(0, 1);
+					currentMoveToYSpeed -= 1.0f;
+				}
+			}
+			if(this.y == moveToY && this.x == moveToX){
+				moveToReady = true;
+			}
+		}
+	}
+	
+	public void moveTo(int x, int y, float speed){
+		moveTo.add(x+":"+y+":"+speed);
+	}
+	
+	public void move(double degree, float speed){
 		if(degree < 45.0 && degree > 0){
 			y+=speed;
 			degree = Math.toRadians(degree);
@@ -88,23 +134,27 @@ public class Sprite implements EngineFrame{
 	}
 	
 	/**
-	 * @deprecated
+	 * 
 	 * 
 	 * @param widthPercent
 	 * @param heightPercent
 	 */
 	public void scale(double widthPercent, double heightPercent){
-		//TODO
+		this.width*=widthPercent;
+		this.height*=heightPercent;
+		spriteImage = Scalr.resize(spriteImage, Scalr.Method.BALANCED, this.width, this.height);
 	}
 	
 	/**
-	 * @deprecated
+	 * 
 	 * 
 	 * @param width
 	 * @param height
 	 */
-	public void scale(int width, int height){
-		//TODO
+	public void resize(int width, int height){
+		this.width = width;
+		this.height = height;
+		spriteImage = Scalr.resize(spriteImage, Scalr.Method.BALANCED, width, height);
 	}
 	
 	public Point getPosition(){
@@ -149,19 +199,11 @@ public class Sprite implements EngineFrame{
 	}
 	
 	public void setWidth(int width){
-		if(spriteImage != null){
-			//TODO Scale image
-		}else{
-			this.width = width;
-		}
+		this.resize(width, this.height);
 	}
 
 	public void setHeight(int height){
-		if(spriteImage != null){
-			//TODO Scale image
-		}else{
-			this.height = height;
-		}
+		this.resize(this.width, height);
 	}
 	
 	public void setImage(String filePath){
