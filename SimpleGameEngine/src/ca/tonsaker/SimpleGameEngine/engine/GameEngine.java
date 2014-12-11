@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
+
 /**
  * A simple to use Game Engine that runs in a {@link JPanel} inside of a {@link JFrame}
  * 
@@ -20,6 +22,8 @@ import javax.swing.Timer;
 public abstract class GameEngine extends JPanel implements EngineFrame {        
         private int fps;
         private int ups;
+        
+        private DebugOverlay debug;
         
         private Timer fpsTimer;
         private Timer upsTimer;
@@ -222,6 +226,8 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 		setVisible(true);
 		input = new InputHandler(frame);
 		setDoubleBuffered(true);
+		debug = new DebugOverlay(this);
+		debug.init();
 	}
 	
 	/** 
@@ -229,7 +235,7 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 * around and check for win conditions, etc.
 	 */ 
 	public void update(){
-		
+		debug.update();
 	}
 	
 	/** 
@@ -240,5 +246,6 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 */ 
 	public void paint(Graphics g){
 		super.paint(g);
+		debug.paint(g);
 	}
 } 

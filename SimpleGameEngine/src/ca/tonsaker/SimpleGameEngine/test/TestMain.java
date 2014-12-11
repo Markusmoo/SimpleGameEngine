@@ -1,12 +1,10 @@
 package ca.tonsaker.SimpleGameEngine.test;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
 import ca.tonsaker.SimpleGameEngine.engine.graphics.Sprite;
-import ca.tonsaker.SimpleGameEngine.engine.graphics.Triangle;
 import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
 
 import javax.swing.JFrame;
@@ -39,7 +37,6 @@ public class TestMain extends GameEngine implements EngineFrame{
 	@Override
 	public void init(){
 		super.init(); //Always call super.init() first!
-		debug = new DebugOverlay(this);
 		sprite = new Sprite(100, 100, "res/TestPic.png");
 		sprite.moveTo(400, 400, 1.0f);
 		sprite.moveTo(600, 300, 0.5f);
@@ -60,8 +57,7 @@ public class TestMain extends GameEngine implements EngineFrame{
 	public void paint(Graphics g) {
 		super.paint(g); //Always call super.draw(g) first!
 		sprite.paint(g);
-		debug.debugText(g, "!This is some sample debug text", Color.red, 1);
-		debug.debugText(g, "!This is some sample debug text", Color.orange, 2);
+		
 	}
 
 }
