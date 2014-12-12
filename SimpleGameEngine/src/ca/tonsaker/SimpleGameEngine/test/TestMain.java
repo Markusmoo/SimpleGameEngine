@@ -47,8 +47,8 @@ public class TestMain extends GameEngine implements EngineFrame{
 	@Override
 	public void update() {
 		//double degree = 22.5;
-		debug.update();
-		sprite.update();
+		//debug.update();
+		//sprite.update();
 		//sprite.move(degree, 1); //TODO debug
 		//this.setTitle("x+="+Math.round(1/Math.tan(Math.toRadians(degree))));  //Math.round(1*Math.atan(11.25))));
 	}
@@ -56,7 +56,7 @@ public class TestMain extends GameEngine implements EngineFrame{
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g); //Always call super.draw(g) first!
-		sprite.paint(g);
+		//sprite.paint(g);
 		
 	}
 

@@ -13,30 +13,66 @@ import ca.tonsaker.SimpleGameEngine.engine.InputHandler;
 public class DebugOverlay implements EngineFrame{
 	
 	public class DebugInfo{
-		
+
 		private String debugText;
 		private Color colour; 
 		private int index;
 		
-		public DebugInfo(String text, Color col, int idx){
-			if(idx <= 0) idx = 1;
-			debugText = text;
-			colour = col;
-			index = idx;
+		public DebugInfo(String text, Color col, int index){
+			if(index <= 0){
+				index = 1;
+				System.err.println("Cannot use DebugOverlay index "+index+" as it is reserved.  Setting to index 1.");
+			}
+			this.debugText = text;
+			this.colour = col;
+			this.index = index;
 		}
+		
+		private DebugInfo(){
+			debugText = "Game created with SimpleGameEngine by Markus Tonsaker";
+			index = 0;
+			colour = Color.blue;
+		}
+		
+		public String getDebugText() {
+			return debugText;
+		}
+
+		public void setDebugText(String debugText) {
+			this.debugText = debugText;
+		}
+
+		public Color getColour() {
+			return colour;
+		}
+
+		public void setColour(Color colour) {
+			this.colour = colour;
+		}
+
+		public int getIndex() {
+			return index;
+		}
+
+		public void setIndex(int index) {
+			if(index <= 0){
+				index = 1;
+				System.err.println("Cannot use DebugOverlay index "+index+" as it is reserved.  Setting to index 1.");
+			}
+			this.index = index;
+		}
+		
 	}
 	
 	protected static ArrayList<DebugInfo> infoList = new ArrayList<DebugInfo>();
 	
-	protected static GameEngine panel;
 	protected static InputHandler input;
 	protected static boolean showing = false;
 	protected static boolean toggle = true;
 	private static boolean canToggle = false; 
 
-	public DebugOverlay(GameEngine panel) {
-		DebugOverlay.panel = panel;
-		DebugOverlay.input = new InputHandler(panel.getFrame());
+	public DebugOverlay(InputHandler in){
+		DebugOverlay.input = in;
 	}
 	
 	public static void setDebugScreenToggable(boolean on){
@@ -46,23 +82,29 @@ public class DebugOverlay implements EngineFrame{
 	public static boolean isDebugScreenToggable(){
 		return toggle;
 	}
+	
+	public static void addDebug(DebugInfo debug){
+		infoList.add(debug);
+	}
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		
+		DebugOverlay.addDebug(new DebugInfo());
 	}
 
 	@Override
 	public void paint(Graphics g) {
 		if(showing){
 			Color org = g.getColor();
-			g.setColor(Color.blue);
-			g.drawString("Game created with SimpleGameEngine by Markus Tonsaker", 15, 20);
-			g.setColor(org);
 			for(DebugInfo d : (DebugInfo[]) infoList.toArray()){
-				if(d.colour != null) g.setColor(d.colour);
-				g.drawString(d.debugText, 15, (17*d.index)+20);
+				if(d != null){
+					if(d.colour != null) g.setColor(d.colour);
+					if(d.index > 0){
+						g.drawString(d.debugText, 15, (17*d.index)+20);
+					}else{
+						g.drawString(d.debugText, 15, 20);
+					}
+				}
 			}
 			g.setColor(org);
 		}

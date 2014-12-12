@@ -31,6 +31,8 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
         protected JFrame frame; 
         public InputHandler input; 
         
+        //TODO Implement Graphics2D instead of Graphics
+        
         public GameEngine(int x, int y, int width, int height){
     		fpsTimer = new Timer(0, new ActionListener(){
 
@@ -226,7 +228,7 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 		setVisible(true);
 		input = new InputHandler(frame);
 		setDoubleBuffered(true);
-		debug = new DebugOverlay(this);
+		debug = new DebugOverlay(input);
 		debug.init();
 	}
 	
