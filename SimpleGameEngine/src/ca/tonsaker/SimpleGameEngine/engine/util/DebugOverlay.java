@@ -1,18 +1,17 @@
 package ca.tonsaker.SimpleGameEngine.engine.util;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
-import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
 import ca.tonsaker.SimpleGameEngine.engine.InputHandler;
 
 
 public class DebugOverlay implements EngineFrame{
 	
-	public class DebugInfo{
+	public static class DebugInfo{
 
 		private String debugText;
 		private Color colour; 
@@ -93,10 +92,10 @@ public class DebugOverlay implements EngineFrame{
 	}
 
 	@Override
-	public void paint(Graphics g) {
+	public void render(Graphics2D g) {
 		if(showing){
 			Color org = g.getColor();
-			for(DebugInfo d : (DebugInfo[]) infoList.toArray()){
+			for(DebugInfo d : infoList){
 				if(d != null){
 					if(d.colour != null) g.setColor(d.colour);
 					if(d.index > 0){

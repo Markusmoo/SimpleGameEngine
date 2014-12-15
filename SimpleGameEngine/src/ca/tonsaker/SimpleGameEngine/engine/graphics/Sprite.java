@@ -1,6 +1,7 @@
 package ca.tonsaker.SimpleGameEngine.engine.graphics;
 
-import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -13,9 +14,11 @@ import javax.imageio.ImageIO;
 import org.imgscalr.Scalr;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
+import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
+import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay.DebugInfo;
 
 
-//TODO Add missing texture, scales accordingly
+//TODO Add missing texture, scales accordingly. update paint methods to graphics2D, fix moveTo, implement missing methods
 public class Sprite implements EngineFrame{
 	
 	int x, y;
@@ -62,50 +65,60 @@ public class Sprite implements EngineFrame{
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		
+		debra = new DebugInfo("CurrentX:"+moveToCurrentX+" CurrentY:"+moveToCurrentY+" MoveToReady:"+moveToReady,Color.red,6);
+		DebugOverlay.addDebug(debra);//TODO DEBUG
 	}
 
 	@Override
-	public void paint(Graphics g) {
+	public void render(Graphics2D g) {
 		g.drawImage(spriteImage, x, y, null);
 	}
 
 	@Override
 	public void update() {
 		moveToUpdate();
+		debra.setDebugText("CurrentX:"+moveToCurrentX+" CurrentY:"+moveToCurrentY+" MoveToReady:"+moveToReady);
 	}
 	
-	private int moveToX = 0;
-	private int moveToY = 0;
-	private int currentMoveToXSpeed = 0;
-	private int currentMoveToYSpeed = 0;
-	private float moveToSpeed = 0.0f;
+	DebugInfo debra;; //TODO DEBUG
+	
+	private int moveToTargetX = 0;
+	private int moveToTargetY = 0;
+	private float moveToCurrentX = 0.0f;
+	private float moveToCurrentY = 0.0f;
+	private float moveToXSpeed = 0.0f;
+	private float moveToYSpeed = 0.0f;
 	private boolean moveToReady = true;
 	private void moveToUpdate(){
 		if(!moveTo.isEmpty()){
 			if(moveToReady){
-				String info = moveTo.remove();
-				moveToX = Integer.parseInt(info.substring(0, info.indexOf(':')));
-				moveToY = Integer.parseInt(info.substring(info.indexOf(':')+1, info.lastIndexOf(':')));
-				moveToSpeed = Float.parseFloat(info.substring(info.lastIndexOf(':')+1));
+				String info = moveTo.poll();
+				moveToTargetX = Integer.parseInt(info.substring(0, info.indexOf(':')));
+				moveToTargetY = Integer.parseInt(info.substring(info.indexOf(':')+1, info.lastIndexOf(':')));
 				moveToReady = false;
+				float speed = Float.parseFloat(info.substring(info.lastIndexOf(':')+1));
+				if(moveToTargetX > moveToTargetY){
+					moveToCurrentX = x;
+					moveToXSpeed = (moveToTargetX/moveToTargetY)*speed;
+					moveToYSpeed = speed;
+				}else{
+					moveToCurrentY = y;
+					moveToXSpeed = speed;
+					moveToYSpeed = (moveToTargetX/moveToTargetY)*speed;
+				}
 			}
 			
-			if(this.x != moveToX){
-				currentMoveToXSpeed += moveToSpeed;
-				if(currentMoveToXSpeed >= 1.0f){
-					this.moveAmount(1, 0);
-					currentMoveToXSpeed -= 1.0f;
-				}
+			if(this.x != moveToTargetX){
+				moveToCurrentX += moveToXSpeed;
+				this.setX(Math.round(moveToCurrentX));
 			}
-			if(this.y != moveToY){
-				currentMoveToYSpeed += moveToSpeed;
-				if(currentMoveToYSpeed >= 1.0f){
-					this.moveAmount(0, 1);
-					currentMoveToYSpeed -= 1.0f;
-				}
+			
+			if(this.y != moveToTargetY){
+				moveToCurrentY += moveToYSpeed;
+				this.setY(Math.round(moveToCurrentY));
 			}
-			if(this.y == moveToY && this.x == moveToX){
+			
+			if(this.y == moveToTargetY && this.x == moveToTargetX){
 				moveToReady = true;
 			}
 		}
@@ -115,6 +128,11 @@ public class Sprite implements EngineFrame{
 		moveTo.add(x+":"+y+":"+speed);
 	}
 	
+	/**
+	 * @deprecated
+	 * @param degree
+	 * @param speed
+	 */
 	public void move(double degree, float speed){
 		if(degree < 45.0 && degree > 0){
 			y+=speed;

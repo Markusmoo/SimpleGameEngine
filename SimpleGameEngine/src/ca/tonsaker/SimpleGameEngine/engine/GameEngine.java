@@ -2,8 +2,10 @@ package ca.tonsaker.SimpleGameEngine.engine;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame; 
 import javax.swing.JPanel;
@@ -31,7 +33,7 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
         protected JFrame frame; 
         public InputHandler input; 
         
-        //TODO Implement Graphics2D instead of Graphics
+        //TODO Fix Graphics Error (PaintComponent() ?)
         
         public GameEngine(int x, int y, int width, int height){
     		fpsTimer = new Timer(0, new ActionListener(){
@@ -65,7 +67,6 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 */ 
 	public void run(){ 
         init();
-        repaint();
 		
 		fpsTimer.start();
 		upsTimer.start();
@@ -242,12 +243,22 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	
 	/** 
 	 * This method will draw everything.  It is a good idea
-	 * to call super.draw(g) in subclasses with this method overridden, first.
+	 * to call super.paint(g) in subclasses with this method overridden, first.
 	 * 
 	 * @param g - The graphics device to paint to.
 	 */ 
-	public void paint(Graphics g){
-		super.paint(g);
-		debug.paint(g);
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		debug.render((Graphics2D) g);
+		render((Graphics2D) g);
+	}
+	
+	/** 
+	 * This method will draw all graphics on screen.
+	 * 
+	 * @param g - The graphics2D device to paint to.
+	 */ 
+	public void render(Graphics2D g){
+		
 	}
 } 
