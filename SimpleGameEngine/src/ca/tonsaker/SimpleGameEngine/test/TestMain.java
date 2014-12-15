@@ -2,6 +2,9 @@ package ca.tonsaker.SimpleGameEngine.test;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
@@ -26,10 +29,10 @@ public class TestMain extends GameEngine implements EngineFrame{
 	public static void main(String[] args){
 		TestMain main = new TestMain(0,0,800,600); //Creates the JFrame at X,Y, and then sets the WIDTH and HEIGHT
 		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Sets the default close operation to erase all memory and close the Program
-		main.setResizable(true); //Disallows the parent JFrame to be resized
+		main.setResizable(false); //Disallows the parent JFrame to be resized
 		main.setTitle("SAMPLE TITLE"); //Changes the title of the parent JFrame
 		main.setFPS(60); //The FPS (Frames per second)
-		main.setUPS(60); //The UPS (Updates per second)
+		main.setUPS(1); //The UPS (Updates per second)
 		main.run(); //Starts the update and drawing loop at the set FPS
 	}
 	
@@ -40,10 +43,42 @@ public class TestMain extends GameEngine implements EngineFrame{
 		super.init(); //Always call super.init() first!
 		sprite = new Sprite(100, 100, "res/TestPic.png");
 		sprite.init();
-		sprite.moveTo(400, 400, 1.0f);
-		sprite.moveTo(600, 300, 1.0f);
-		d1 = new DebugInfo("Sprite x:"+sprite.getX()+" Sprite y:"+sprite.getY(), Color.red, 0);
+		d1 = new DebugInfo("Sprite x:"+sprite.getX()+" Sprite y:"+sprite.getY(), Color.red, 1);
 		DebugOverlay.addDebug(d1);
+		this.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Point p = getMousePosition();
+				//sprite.moveTo(p.x, p.y, 1.0f);
+				sprite.moveTo(415, 300, 1.0f);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 	}
 	
 	Sprite sprite;
@@ -61,7 +96,7 @@ public class TestMain extends GameEngine implements EngineFrame{
 	@Override
 	public void render(Graphics2D g) {
 		sprite.render(g);
-		g.drawRoundRect(350, 200, 200, 100,	20, 40);
+		//g.drawRoundRect(350, 200, 200, 100,	20, 40);
 	}
 
 }

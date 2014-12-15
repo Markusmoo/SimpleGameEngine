@@ -3,6 +3,7 @@ package ca.tonsaker.SimpleGameEngine.engine.graphics;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class Sprite implements EngineFrame{
 	int x, y;
 	int width, height;
 	BufferedImage spriteImage;
+	boolean spriteMoving = false;
 	
 	Queue<String> moveTo = new LinkedList<String>();
 	
@@ -65,7 +67,7 @@ public class Sprite implements EngineFrame{
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		debra = new DebugInfo("CurrentX:"+moveToCurrentX+" CurrentY:"+moveToCurrentY+" MoveToReady:"+moveToReady,Color.red,6);
+		debra = new DebugInfo("",Color.red,6);
 		DebugOverlay.addDebug(debra);//TODO DEBUG
 	}
 
@@ -77,49 +79,66 @@ public class Sprite implements EngineFrame{
 	@Override
 	public void update() {
 		moveToUpdate();
-		debra.setDebugText("CurrentX:"+moveToCurrentX+" CurrentY:"+moveToCurrentY+" MoveToReady:"+moveToReady);
+		debra.setDebugText("Moving:"+spriteMoving+" TargetX:"+moveToTargetX+" TargetY:"+moveToTargetY+" CurrentX:"+moveToCurrentX+" CurrentY:"+moveToCurrentY+" Xspeed:"+moveToXSpeed+" Yspeed:"+moveToYSpeed);
 	}
 	
 	DebugInfo debra;; //TODO DEBUG
 	
-	private int moveToTargetX = 0;
-	private int moveToTargetY = 0;
+	private float moveToTargetX = 0;
+	private float moveToTargetY = 0;
 	private float moveToCurrentX = 0.0f;
 	private float moveToCurrentY = 0.0f;
 	private float moveToXSpeed = 0.0f;
 	private float moveToYSpeed = 0.0f;
-	private boolean moveToReady = true;
+	
+	//TODO Change string puller accordingly to moveToAI
 	private void moveToUpdate(){
-		if(!moveTo.isEmpty()){
-			if(moveToReady){
-				String info = moveTo.poll();
-				moveToTargetX = Integer.parseInt(info.substring(0, info.indexOf(':')));
-				moveToTargetY = Integer.parseInt(info.substring(info.indexOf(':')+1, info.lastIndexOf(':')));
-				moveToReady = false;
-				float speed = Float.parseFloat(info.substring(info.lastIndexOf(':')+1));
-				if(moveToTargetX > moveToTargetY){
-					moveToCurrentX = x;
-					moveToXSpeed = (moveToTargetX/moveToTargetY)*speed;
-					moveToYSpeed = speed;
-				}else{
-					moveToCurrentY = y;
-					moveToXSpeed = speed;
-					moveToYSpeed = (moveToTargetX/moveToTargetY)*speed;
-				}
-			}
+		if(!spriteMoving && !moveTo.isEmpty()){
+			String info = moveTo.poll();
+			System.out.println("\nSprite "+this.toString()+" received moveTo command("+info+").");
+			moveToTargetX = Integer.parseInt(info.substring(0, info.indexOf(':')));
+			moveToTargetY = Integer.parseInt(info.substring(info.indexOf(':')+1, info.lastIndexOf(':')));
+			spriteMoving = true;
+			float speed = Float.parseFloat(info.substring(info.lastIndexOf(':')+1));
 			
-			if(this.x != moveToTargetX){
-				moveToCurrentX += moveToXSpeed;
+			System.out.println("TargetX:"+moveToTargetX+" TargetY:"+moveToTargetY+" SpeedMultiplier:"+speed); //TODO DEBUG
+			
+			if(moveToTargetX > moveToTargetY){
+				moveToCurrentX = x;
+				moveToCurrentY = y;
+				moveToXSpeed = (moveToTargetX/moveToTargetY)*speed;
+				moveToYSpeed = speed;
+				System.out.println("x>y xSpeed:"+moveToXSpeed+" ySpeed:"+moveToYSpeed);
+			}else{
+				moveToCurrentX = x;
+				moveToCurrentY = y;
+				moveToXSpeed = speed;
+				moveToYSpeed = (moveToTargetY/moveToTargetX)*speed;
+				System.out.println("y>x xSpeed:"+moveToXSpeed+" ySpeed:"+moveToYSpeed);
+			}
+		}else if(spriteMoving){
+			if(moveToCurrentX != moveToTargetX){
+				if(moveToTargetX>moveToCurrentX){
+					moveToCurrentX += moveToXSpeed;
+				}else{
+					moveToCurrentX -= moveToXSpeed;
+				}
 				this.setX(Math.round(moveToCurrentX));
 			}
 			
-			if(this.y != moveToTargetY){
-				moveToCurrentY += moveToYSpeed;
+			if(this.moveToCurrentY != moveToTargetY){
+				if(moveToTargetY>moveToCurrentY){
+					moveToCurrentY += moveToYSpeed;
+				}else{
+					moveToCurrentY -= moveToYSpeed;
+				}
 				this.setY(Math.round(moveToCurrentY));
 			}
 			
-			if(this.y == moveToTargetY && this.x == moveToTargetX){
-				moveToReady = true;
+			//System.out.println(moveToTargetX-moveToCurrentX<moveToXSpeed);
+			
+			if(moveToCurrentY == moveToTargetY && moveToCurrentX == moveToTargetX){
+				spriteMoving = false;
 			}
 		}
 	}
@@ -128,11 +147,27 @@ public class Sprite implements EngineFrame{
 		moveTo.add(x+":"+y+":"+speed);
 	}
 	
+	public void moveTo(Point point, float speed){
+		moveTo(point.x,point.y,speed);
+	}
+	
+	public void moveTo(Point[] points, float speed){
+		for(Point p : points){
+			moveTo(p.x,p.y,speed);
+		}
+	}
+	
+	public void moveToAI(int x, int y, Rectangle[] avoidBox){
+		//TODO Method stub
+	}
+	
 	/**
-	 * @deprecated
-	 * @param degree
-	 * @param speed
-	 */
+	 * Move a certain amount of pixels in 360 degrees.
+	 * 
+	 * @deprecated Broken Method
+	 * @param degree X <= 360 Degrees
+	 * @param speed Amount of pixels.
+	 */ //TODO Finish
 	public void move(double degree, float speed){
 		if(degree < 45.0 && degree > 0){
 			y+=speed;
@@ -234,5 +269,9 @@ public class Sprite implements EngineFrame{
 	
 	public void setImage(BufferedImage image){
 		this.spriteImage = image;
+	}
+	
+	public String toString(){
+		return "Sprite(X:"+x+" Y:"+y+")";
 	}
 }
