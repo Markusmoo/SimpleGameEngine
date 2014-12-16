@@ -32,7 +32,7 @@ public class TestMain extends GameEngine implements EngineFrame{
 		main.setResizable(false); //Disallows the parent JFrame to be resized
 		main.setTitle("SAMPLE TITLE"); //Changes the title of the parent JFrame
 		main.setFPS(60); //The FPS (Frames per second)
-		main.setUPS(1); //The UPS (Updates per second)
+		main.setUPS(100); //The UPS (Updates per second)
 		main.run(); //Starts the update and drawing loop at the set FPS
 	}
 	
