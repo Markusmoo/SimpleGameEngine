@@ -84,8 +84,10 @@ public class Sprite implements EngineFrame{
 	
 	DebugInfo debra;; //TODO DEBUG
 	
-	private float moveToTargetX = 0;
-	private float moveToTargetY = 0;
+	private float moveToStartX = 0.0f;
+	private float moveToStartY = 0.0f;
+	private float moveToTargetX = 0.0f;
+	private float moveToTargetY = 0.0f;
 	private float moveToCurrentX = 0.0f;
 	private float moveToCurrentY = 0.0f;
 	private float moveToXSpeed = 0.0f;
@@ -106,12 +108,16 @@ public class Sprite implements EngineFrame{
 			if(moveToTargetX > moveToTargetY){
 				moveToCurrentX = x;
 				moveToCurrentY = y;
+				moveToStartX = x;
+				moveToStartY = y;
 				moveToXSpeed = (moveToTargetX/moveToTargetY)*speed;
 				moveToYSpeed = speed;
 				System.out.println("x>y xSpeed:"+moveToXSpeed+" ySpeed:"+moveToYSpeed);
 			}else{
 				moveToCurrentX = x;
 				moveToCurrentY = y;
+				moveToStartX = x;
+				moveToStartY = y;
 				moveToXSpeed = speed;
 				moveToYSpeed = (moveToTargetY/moveToTargetX)*speed;
 				System.out.println("y>x xSpeed:"+moveToXSpeed+" ySpeed:"+moveToYSpeed);
