@@ -50,8 +50,8 @@ public class TestMain extends GameEngine implements EngineFrame{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				Point p = getMousePosition();
-				//sprite.moveTo(p.x, p.y, 1.0f);
-				sprite.moveTo(415, 300, 1.0f);
+				sprite.moveTo(p.x, p.y, 1.0f);
+				//sprite.moveTo(415, 300, 1.0f);
 			}
 
 			@Override

@@ -67,7 +67,7 @@ public class Sprite implements EngineFrame{
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
-		debra = new DebugInfo("",Color.red,6);
+		debra = new DebugInfo("",Color.red,6); 
 		DebugOverlay.addDebug(debra);//TODO DEBUG
 	}
 
@@ -83,9 +83,7 @@ public class Sprite implements EngineFrame{
 	}
 	
 	DebugInfo debra;; //TODO DEBUG
-	
-	private float moveToStartX = 0.0f;
-	private float moveToStartY = 0.0f;
+
 	private float moveToTargetX = 0.0f;
 	private float moveToTargetY = 0.0f;
 	private float moveToCurrentX = 0.0f;
@@ -105,45 +103,46 @@ public class Sprite implements EngineFrame{
 			
 			System.out.println("TargetX:"+moveToTargetX+" TargetY:"+moveToTargetY+" SpeedMultiplier:"+speed); //TODO DEBUG
 			
+			
 			if(moveToTargetX > moveToTargetY){
 				moveToCurrentX = x;
 				moveToCurrentY = y;
-				moveToStartX = x;
-				moveToStartY = y;
-				moveToXSpeed = (moveToTargetX/moveToTargetY)*speed;
-				moveToYSpeed = speed;
+				moveToXSpeed = ((moveToTargetX-x)/(moveToTargetY-y))*speed;
+				moveToYSpeed = speed/moveToXSpeed;
+				moveToXSpeed = moveToXSpeed/(int) moveToXSpeed; //TODO Fix?
 				System.out.println("x>y xSpeed:"+moveToXSpeed+" ySpeed:"+moveToYSpeed);
 			}else{
 				moveToCurrentX = x;
 				moveToCurrentY = y;
-				moveToStartX = x;
-				moveToStartY = y;
-				moveToXSpeed = speed;
-				moveToYSpeed = (moveToTargetY/moveToTargetX)*speed;
+				moveToYSpeed = ((moveToTargetY-y)/(moveToTargetX-x))*speed;
+				moveToXSpeed = speed/moveToYSpeed;
+				moveToYSpeed = moveToYSpeed/(int) moveToYSpeed; //TODO Fix?
 				System.out.println("y>x xSpeed:"+moveToXSpeed+" ySpeed:"+moveToYSpeed);
 			}
+			
+			/*
+			moveToCurrentX = x;
+			moveToCurrentY = y;
+			moveToXSpeed = ((moveToTargetX-x)/(moveToTargetY-y))*speed;
+			moveToYSpeed = ((moveToTargetY-y)/(moveToTargetX-x))*speed;
+			System.out.println("xSpeed:"+moveToXSpeed+" ySpeed:"+moveToYSpeed);*/
+			
 		}else if(spriteMoving){
 			if(moveToCurrentX != moveToTargetX){
-				if(moveToTargetX>moveToCurrentX){
-					moveToCurrentX += moveToXSpeed;
-				}else{
-					moveToCurrentX -= moveToXSpeed;
-				}
+				moveToCurrentX += moveToXSpeed;
 				this.setX(Math.round(moveToCurrentX));
 			}
 			
 			if(this.moveToCurrentY != moveToTargetY){
-				if(moveToTargetY>moveToCurrentY){
-					moveToCurrentY += moveToYSpeed;
-				}else{
-					moveToCurrentY -= moveToYSpeed;
-				}
+				moveToCurrentY += moveToYSpeed;
 				this.setY(Math.round(moveToCurrentY));
 			}
 			
 			//System.out.println(moveToTargetX-moveToCurrentX<moveToXSpeed);
 			
-			if(moveToCurrentY == moveToTargetY && moveToCurrentX == moveToTargetX){
+			if((moveToCurrentY >= moveToTargetY-moveToYSpeed && moveToCurrentY <= moveToTargetY+moveToYSpeed) && (moveToCurrentX >= moveToTargetX-moveToXSpeed && moveToCurrentX <= moveToTargetX+moveToXSpeed)){
+				x = (int) moveToTargetX;
+				y = (int) moveToTargetY;
 				spriteMoving = false;
 			}
 		}
