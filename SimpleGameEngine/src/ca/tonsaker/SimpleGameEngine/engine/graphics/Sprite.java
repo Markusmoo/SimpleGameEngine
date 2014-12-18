@@ -140,21 +140,23 @@ public class Sprite implements EngineFrame{
 			if(!moveTo.peek().isAi()){
 				moveInfo = moveTo.poll();
 				spriteMoving = true;
+				System.out.println("Next X"+moveInfo.targetX+" Y"+moveInfo.targetY);
 			}
-		}else if(spriteMoving){
+		}else if(spriteMoving && moveInfo != null){
 			if((int) x != (int) moveInfo.getTargetX() && (int) y != moveInfo.getTargetY()){
 				double nextY = y + (moveInfo.getSpeed() * Math.cos(moveInfo.getDirection()));
 				double nextX = x + (moveInfo.getSpeed() * Math.sin(moveInfo.getDirection()));
-				System.out.println(x+" "+moveInfo.getTargetX()+" "+moveInfo.getSpeed() * Math.sin(moveInfo.getDirection()));
 				setPosition(nextX, nextY);
 			}else{
 				spriteMoving = false;
+				moveInfo = null;
 			}
 		}
 	}
 	
 	public void moveTo(int x, int y, float speed){
 		moveTo.add(new MoveInfo(x,y,speed));
+		System.out.println("Added mvoeTo");
 	}
 	
 	public void moveTo(Point point, float speed){
