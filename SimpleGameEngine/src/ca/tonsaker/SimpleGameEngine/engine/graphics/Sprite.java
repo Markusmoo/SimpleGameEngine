@@ -12,6 +12,8 @@ import java.util.Queue;
 
 import javax.imageio.ImageIO;
 
+import moo.Moo;
+
 import org.imgscalr.Scalr;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
@@ -22,12 +24,60 @@ import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay.DebugInfo;
 //TODO Add missing texture, scales accordingly. update paint methods to graphics2D, fix moveTo, implement missing methods
 public class Sprite implements EngineFrame{
 	
-	int x, y;
+	private class MoveInfo{
+
+		private double targetX, targetY;
+		private double deltaX, deltaY;
+		private double direction;
+		private double speed;
+		private boolean ai;
+		
+		public MoveInfo(double targetX, double targetY, double speed){
+			this.targetX = targetX;
+			this.targetY = targetY;
+			this.speed = speed;
+			this.deltaX = targetX - x;
+			this.deltaY = targetY - y;
+			calculateDirection();
+			ai = false;
+		}
+		
+		public double getTargetX() {
+			return targetX;
+		}
+
+		public double getTargetY() {
+			return targetY;
+		}
+
+		public double getDirection() {
+			return direction;
+		}
+
+		public double getSpeed() {
+			return speed;
+		}
+
+		public boolean isAi() {
+			return ai;
+		}
+
+		private void calculateDirection(){
+			this.direction = Math.atan2(deltaX, deltaY);
+		}
+	}
+	
+	public final int NORTH = 90;
+	public final int EAST = 0;
+	public final int SOUTH = 270;
+	public final int WEST = 190;
+	
+	double x, y;
 	int width, height;
 	BufferedImage spriteImage;
 	boolean spriteMoving = false;
 	
-	Queue<String> moveTo = new LinkedList<String>();
+	Queue<MoveInfo> moveTo = new LinkedList<MoveInfo>(); //Create a moveTo Class
 	
 	public Sprite(int x, int y, int width, int height, String file){
 		this.setPosition(x, y);
@@ -66,90 +116,45 @@ public class Sprite implements EngineFrame{
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
 		debra = new DebugInfo("",Color.red,6); 
 		DebugOverlay.addDebug(debra);//TODO DEBUG
 	}
 
 	@Override
 	public void render(Graphics2D g) {
-		g.drawImage(spriteImage, x, y, null);
+		g.drawImage(spriteImage, (int) x, (int) y, null);
 	}
 
 	@Override
 	public void update() {
 		moveToUpdate();
-		debra.setDebugText("Moving:"+spriteMoving+" TargetX:"+moveToTargetX+" TargetY:"+moveToTargetY+" CurrentX:"+moveToCurrentX+" CurrentY:"+moveToCurrentY+" Xspeed:"+moveToXSpeed+" Yspeed:"+moveToYSpeed);
 	}
 	
-	DebugInfo debra;; //TODO DEBUG
+	DebugInfo debra; //TODO DEBUG
 
-	private float moveToTargetX = 0.0f;
-	private float moveToTargetY = 0.0f;
-	private float moveToCurrentX = 0.0f;
-	private float moveToCurrentY = 0.0f;
-	private float moveToXSpeed = 0.0f;
-	private float moveToYSpeed = 0.0f;
+	private MoveInfo moveInfo;
 	
 	//TODO Change string puller accordingly to moveToAI
 	private void moveToUpdate(){
 		if(!spriteMoving && !moveTo.isEmpty()){
-			String info = moveTo.poll();
-			System.out.println("\nSprite "+this.toString()+" received moveTo command("+info+").");
-			moveToTargetX = Integer.parseInt(info.substring(0, info.indexOf(':')));
-			moveToTargetY = Integer.parseInt(info.substring(info.indexOf(':')+1, info.lastIndexOf(':')));
-			spriteMoving = true;
-			float speed = Float.parseFloat(info.substring(info.lastIndexOf(':')+1));
-			
-			System.out.println("TargetX:"+moveToTargetX+" TargetY:"+moveToTargetY+" SpeedMultiplier:"+speed); //TODO DEBUG
-			
-			
-			if(moveToTargetX > moveToTargetY){
-				moveToCurrentX = x;
-				moveToCurrentY = y;
-				moveToXSpeed = ((moveToTargetX-x)/(moveToTargetY-y))*speed;
-				moveToYSpeed = speed/moveToXSpeed;
-				moveToXSpeed = moveToXSpeed/(int) moveToXSpeed; //TODO Fix?
-				System.out.println("x>y xSpeed:"+moveToXSpeed+" ySpeed:"+moveToYSpeed);
-			}else{
-				moveToCurrentX = x;
-				moveToCurrentY = y;
-				moveToYSpeed = ((moveToTargetY-y)/(moveToTargetX-x))*speed;
-				moveToXSpeed = speed/moveToYSpeed;
-				moveToYSpeed = moveToYSpeed/(int) moveToYSpeed; //TODO Fix?
-				System.out.println("y>x xSpeed:"+moveToXSpeed+" ySpeed:"+moveToYSpeed);
+			if(!moveTo.peek().isAi()){
+				moveInfo = moveTo.poll();
+				spriteMoving = true;
 			}
-			
-			/*
-			moveToCurrentX = x;
-			moveToCurrentY = y;
-			moveToXSpeed = ((moveToTargetX-x)/(moveToTargetY-y))*speed;
-			moveToYSpeed = ((moveToTargetY-y)/(moveToTargetX-x))*speed;
-			System.out.println("xSpeed:"+moveToXSpeed+" ySpeed:"+moveToYSpeed);*/
-			
 		}else if(spriteMoving){
-			if(moveToCurrentX != moveToTargetX){
-				moveToCurrentX += moveToXSpeed;
-				this.setX(Math.round(moveToCurrentX));
-			}
-			
-			if(this.moveToCurrentY != moveToTargetY){
-				moveToCurrentY += moveToYSpeed;
-				this.setY(Math.round(moveToCurrentY));
-			}
-			
-			//System.out.println(moveToTargetX-moveToCurrentX<moveToXSpeed);
-			
-			if((moveToCurrentY >= moveToTargetY-moveToYSpeed && moveToCurrentY <= moveToTargetY+moveToYSpeed) && (moveToCurrentX >= moveToTargetX-moveToXSpeed && moveToCurrentX <= moveToTargetX+moveToXSpeed)){
-				x = (int) moveToTargetX;
-				y = (int) moveToTargetY;
+			if((int) x != (int) moveInfo.getTargetX() && (int) y != moveInfo.getTargetY()){
+				double nextY = y + (moveInfo.getSpeed() * Math.cos(moveInfo.getDirection()));
+				double nextX = x + (moveInfo.getSpeed() * Math.sin(moveInfo.getDirection()));
+				System.out.println(x+" "+moveInfo.getTargetX()+" "+moveInfo.getSpeed() * Math.sin(moveInfo.getDirection()));
+				setPosition(nextX, nextY);
+			}else{
 				spriteMoving = false;
 			}
 		}
 	}
 	
 	public void moveTo(int x, int y, float speed){
-		moveTo.add(x+":"+y+":"+speed);
+		moveTo.add(new MoveInfo(x,y,speed));
 	}
 	
 	public void moveTo(Point point, float speed){
@@ -169,21 +174,17 @@ public class Sprite implements EngineFrame{
 	/**
 	 * Move a certain amount of pixels in 360 degrees.
 	 * 
-	 * @deprecated Broken Method
 	 * @param degree X <= 360 Degrees
 	 * @param speed Amount of pixels.
-	 */ //TODO Finish
-	public void move(double degree, float speed){
-		if(degree < 45.0 && degree > 0){
-			y+=speed;
-			degree = Math.toRadians(degree);
-			x+=Math.round(1/Math.tan(degree));
-		}else if(degree == 45.0){
-			x+=speed;
-			y+=speed;
-		}else if(degree > 45.0 && degree < 90.0){
-			
-		}
+	 */
+	public void move(int degree, float speed){
+		y += speed * Math.cos(Math.toRadians(degree));
+		x += speed * Math.sin(Math.toRadians(degree));
+	}
+	
+	public void move(double radian, float speed){
+		y += speed * Math.cos(radian);
+		x += speed * Math.sin(radian);
 	}
 	
 	public void moveAmount(int x, int y){
@@ -216,15 +217,15 @@ public class Sprite implements EngineFrame{
 	}
 	
 	public Point getPosition(){
-		return new Point(x, y);
+		return new Point((int) x, (int) y);
 	}
 	
 	public int getX(){
-		return x;
+		return (int) x;
 	}
 	
 	public int getY(){
-		return y;
+		return (int) y;
 	}
 	
 	public int getWidth(){
@@ -239,7 +240,7 @@ public class Sprite implements EngineFrame{
 		return spriteImage;
 	}
 	
-	public void setPosition(int x, int y){
+	public void setPosition(double x, double y){
 		this.x = x;
 		this.y = y;
 	}
@@ -249,11 +250,11 @@ public class Sprite implements EngineFrame{
 	}
 	
 	public void setX(int x){
-		setPosition(x, this.y);
+		setPosition((int) x, (int) this.y);
 	}
 	
 	public void setY(int y){
-		setPosition(this.x, y);
+		setPosition((int) this.x, (int) y);
 	}
 	
 	public void setWidth(int width){
