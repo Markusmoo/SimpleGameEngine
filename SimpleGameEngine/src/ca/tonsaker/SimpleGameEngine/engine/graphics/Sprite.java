@@ -12,8 +12,6 @@ import java.util.Queue;
 
 import javax.imageio.ImageIO;
 
-import moo.Moo;
-
 import org.imgscalr.Scalr;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
@@ -36,8 +34,6 @@ public class Sprite implements EngineFrame{
 			this.targetX = targetX;
 			this.targetY = targetY;
 			this.speed = speed;
-			this.deltaX = targetX - x;
-			this.deltaY = targetY - y;
 			calculateDirection();
 			ai = false;
 		}
@@ -62,7 +58,9 @@ public class Sprite implements EngineFrame{
 			return ai;
 		}
 
-		private void calculateDirection(){
+		public void calculateDirection(){
+			this.deltaX = targetX - x;
+			this.deltaY = targetY - y;
 			this.direction = Math.atan2(deltaX, deltaY);
 		}
 	}
@@ -123,6 +121,15 @@ public class Sprite implements EngineFrame{
 	@Override
 	public void render(Graphics2D g) {
 		g.drawImage(spriteImage, (int) x, (int) y, null);
+		int idx = 0;
+		for(Object obj : moveTo.toArray()){
+			MoveInfo m = (MoveInfo) obj;
+			idx++;
+			g.drawString(idx+1+"("+m.getTargetX()+", "+m.getTargetY()+")", (float) m.getTargetX(), (float) m.getTargetY()); 
+		}
+		if(moveInfo != null){
+			g.drawString("1("+moveInfo.getTargetX()+", "+moveInfo.getTargetY()+")", (float) moveInfo.getTargetX(), (float) moveInfo.getTargetY()); 
+		}
 	}
 
 	@Override
@@ -140,14 +147,16 @@ public class Sprite implements EngineFrame{
 			if(!moveTo.peek().isAi()){
 				moveInfo = moveTo.poll();
 				spriteMoving = true;
-				System.out.println("Next X"+moveInfo.targetX+" Y"+moveInfo.targetY);
+				System.out.println("Next ("+moveInfo.targetX+", "+moveInfo.targetY+")");
 			}
 		}else if(spriteMoving && moveInfo != null){
-			if((int) x != (int) moveInfo.getTargetX() && (int) y != moveInfo.getTargetY()){
+			if(Math.round(x) != Math.round(moveInfo.getTargetX()) || Math.round(y) != Math.round(moveInfo.getTargetY())){	
+				moveInfo.calculateDirection();
 				double nextY = y + (moveInfo.getSpeed() * Math.cos(moveInfo.getDirection()));
 				double nextX = x + (moveInfo.getSpeed() * Math.sin(moveInfo.getDirection()));
 				setPosition(nextX, nextY);
 			}else{
+				this.setPosition(moveInfo.getTargetX(), moveInfo.getTargetY());
 				spriteMoving = false;
 				moveInfo = null;
 			}
@@ -156,7 +165,6 @@ public class Sprite implements EngineFrame{
 	
 	public void moveTo(int x, int y, float speed){
 		moveTo.add(new MoveInfo(x,y,speed));
-		System.out.println("Added mvoeTo");
 	}
 	
 	public void moveTo(Point point, float speed){

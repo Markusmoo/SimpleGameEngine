@@ -96,6 +96,7 @@ public class TestMain extends GameEngine implements EngineFrame{
 	public void render(Graphics2D g) {
 		sprite.render(g);
 		//g.drawRoundRect(350, 200, 200, 100,	20, 40);
+		g.dispose();
 	}
 
 }
