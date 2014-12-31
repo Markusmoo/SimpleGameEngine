@@ -15,19 +15,20 @@ import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay.DebugInfo;
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-public class TestMain extends GameEngine implements EngineFrame{
+public class SpriteTestMain extends GameEngine implements EngineFrame{
 	
 	DebugOverlay debug;
 	
 	//TODO Fix NullError from graphic rendering and fix sprite.moveTo not queuing and acting weird
 	
-	public TestMain(int x, int y, int width, int height) {
+	public SpriteTestMain(int x, int y, int width, int height) {
 		super(x, y, width, height);
 		
 	}
 
 	public static void main(String[] args){
-		TestMain main = new TestMain(0,0,800,600); //Creates the JFrame at X,Y, and then sets the WIDTH and HEIGHT
+		SpriteTestMain main = new SpriteTestMain(0,0,800,600); //Creates the JFrame at X,Y, and then sets the WIDTH and HEIGHT
+		main.centerWindow(); //Centers window on screen
 		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Sets the default close operation to erase all memory and close the Program
 		main.setResizable(false); //Disallows the parent JFrame to be resized
 		main.setTitle("SAMPLE TITLE"); //Changes the title of the parent JFrame
@@ -48,34 +49,22 @@ public class TestMain extends GameEngine implements EngineFrame{
 		this.addMouseListener(new MouseListener(){
 
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+
+			@Override
+			public void mouseExited(MouseEvent e) {}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
 				Point p = getMousePosition();
 				sprite.moveTo(p.x, p.y, 1.0f);
 			}
 
 			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseReleased(MouseEvent e) {}
 			
 		});
 	}
@@ -85,7 +74,7 @@ public class TestMain extends GameEngine implements EngineFrame{
 	@Override
 	public void update() {
 		super.update();
-		d1.setDebugText("Sprite x:"+sprite.getX()+"Sprite y:"+sprite.getY());
+		d1.setDebugText("Sprite x:"+sprite.getX()+" Sprite y:"+sprite.getY());
 		//double degree = 22.5;
 		sprite.update();
 		//sprite.move(degree, 1); //TODO debug

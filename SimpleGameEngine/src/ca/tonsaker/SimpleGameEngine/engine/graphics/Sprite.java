@@ -3,7 +3,6 @@ package ca.tonsaker.SimpleGameEngine.engine.graphics;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +17,6 @@ import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
 import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay.DebugInfo;
 
-
-//TODO Add missing texture, scales accordingly. update paint methods to graphics2D, fix moveTo, implement missing methods
 public class Sprite implements EngineFrame{
 	
 	private class MoveInfo{
@@ -175,10 +172,6 @@ public class Sprite implements EngineFrame{
 		for(Point p : points){
 			moveTo(p.x,p.y,speed);
 		}
-	}
-	
-	public void moveToAI(int x, int y, Rectangle[] avoidBox){
-		//TODO Method stub
 	}
 	
 	/**

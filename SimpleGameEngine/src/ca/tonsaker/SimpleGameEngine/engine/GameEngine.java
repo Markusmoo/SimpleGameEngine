@@ -3,9 +3,9 @@ package ca.tonsaker.SimpleGameEngine.engine;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame; 
 import javax.swing.JPanel;
@@ -22,20 +22,21 @@ import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
  */
 @SuppressWarnings("serial")
 public abstract class GameEngine extends JPanel implements EngineFrame {        
-        private int fps;
-        private int ups;
+        protected int fps;
+        protected int ups;
         
-        private DebugOverlay debug;
+        protected DebugOverlay debug;
         
-        private Timer fpsTimer;
-        private Timer upsTimer;
+        protected Timer fpsTimer;
+        protected Timer upsTimer;
         
         protected JFrame frame; 
         public InputHandler input; 
         
-        //TODO Fix Graphics Error (PaintComponent() ?)
+        //TODO Fix Graphics Error (PaintComponent() ?) caused by premature repainting on 
         
         public GameEngine(int x, int y, int width, int height){
+        	this.setIgnoreRepaint(true);
     		fpsTimer = new Timer(0, new ActionListener(){
 
     			@Override
@@ -57,8 +58,10 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
         	setUPS(30); //Sets default UPS
         	frame = new JFrame(); //Creates a JFrame that will contain this (JPanel)
         	frame.setLocation(x, y); //Sets the location of the JFrame
-        	frame.setSize(width, height); //Sets the size of the JFrame
+        	frame.setPreferredSize(new Dimension(width, height)); //Sets the size of the JFrame
         	frame.add(this); //Adds this object (JPanel) to the JFrame
+        	frame.pack();
+        	frame.setVisible(true);
         }
 	 
 	        
@@ -221,12 +224,18 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 		return frame.isResizable();
 	}
 	
+	//TODO doc
+	public void centerWindow() {
+	    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+	    int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+	    int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+	    frame.setLocation(x, y);
+	}
+	
 	/** 
 	 * This method will set up everything need for the game to run.
 	 */ 
 	public void init(){ 
-		frame.setVisible(true);
-		setVisible(true);
 		input = new InputHandler(frame);
 		setDoubleBuffered(true);
 		debug = new DebugOverlay(input);
@@ -249,8 +258,10 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 */ 
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		debug.render((Graphics2D) g);
-		render((Graphics2D) g);
+		if(g != null){
+			debug.render((Graphics2D) g);
+			render((Graphics2D) g);
+		}
 	}
 	
 	/** 

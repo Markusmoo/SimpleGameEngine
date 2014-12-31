@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.InputHandler;
 
-
+//TODO Allow change of debug key (F3)
 public class DebugOverlay implements EngineFrame{
 	
 	public static class DebugInfo{
