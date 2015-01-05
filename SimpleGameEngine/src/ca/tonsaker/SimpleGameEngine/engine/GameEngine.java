@@ -20,9 +20,13 @@ import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
  * @version 1.0
  * @since 2014/11/03
  */
-@SuppressWarnings("serial")
+
 public abstract class GameEngine extends JPanel implements EngineFrame {        
-        protected int fps;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4475810415750194722L;
+		protected int fps;
         protected int ups;
         
         protected DebugOverlay debug;
