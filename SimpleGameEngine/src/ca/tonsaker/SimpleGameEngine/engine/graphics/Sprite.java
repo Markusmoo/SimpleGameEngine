@@ -1,6 +1,5 @@
 package ca.tonsaker.SimpleGameEngine.engine.graphics;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -14,9 +13,8 @@ import javax.imageio.ImageIO;
 import org.imgscalr.Scalr;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
-import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
-import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay.DebugInfo;
 
+//TODO JavaDocs, touch up
 public class Sprite implements EngineFrame{
 	
 	private class MoveInfo{
@@ -67,12 +65,12 @@ public class Sprite implements EngineFrame{
 	public final int SOUTH = 270;
 	public final int WEST = 190;
 	
-	double x, y;
-	int width, height;
-	BufferedImage spriteImage;
-	boolean spriteMoving = false;
+	public double x, y;
+	protected int width, height;
+	protected BufferedImage spriteImage;
+	protected boolean spriteMoving = false;
 	
-	Queue<MoveInfo> moveTo = new LinkedList<MoveInfo>(); //Create a moveTo Class
+	protected Queue<MoveInfo> moveTo = new LinkedList<MoveInfo>(); //Create a moveTo Class
 	
 	public Sprite(int x, int y, int width, int height, String file){
 		this.setPosition(x, y);
@@ -111,22 +109,12 @@ public class Sprite implements EngineFrame{
 
 	@Override
 	public void init() {
-		debra = new DebugInfo("",Color.red,6); 
-		DebugOverlay.addDebug(debra);//TODO DEBUG
+		
 	}
 
 	@Override
 	public void render(Graphics2D g) {
 		g.drawImage(spriteImage, (int) x, (int) y, null);
-		int idx = 0;
-		for(Object obj : moveTo.toArray()){
-			MoveInfo m = (MoveInfo) obj;
-			idx++;
-			g.drawString(idx+1+"("+m.getTargetX()+", "+m.getTargetY()+")", (float) m.getTargetX(), (float) m.getTargetY()); 
-		}
-		if(moveInfo != null){
-			g.drawString("1("+moveInfo.getTargetX()+", "+moveInfo.getTargetY()+")", (float) moveInfo.getTargetX(), (float) moveInfo.getTargetY()); 
-		}
 	}
 
 	@Override
@@ -134,17 +122,34 @@ public class Sprite implements EngineFrame{
 		moveToUpdate();
 	}
 	
-	DebugInfo debra; //TODO DEBUG
-
-	private MoveInfo moveInfo;
+	public Point getNextMove(){
+		Point next = new Point();
+		if(moveInfo != null){
+			next.setLocation(moveInfo.getTargetX(), moveInfo.getTargetY());
+			return next;
+		}else{
+			return null;
+		}
+	}
 	
-	//TODO Change string puller accordingly to moveToAI
-	private void moveToUpdate(){
+	public Point[] getQueuedMoves(){
+		Point[] points = new Point[moveTo.size()];
+		int idx = 0;
+		for(MoveInfo m : moveTo){
+			points[idx] = new Point();
+			points[idx].setLocation(m.getTargetX(), m.getTargetY());
+			idx++;
+		}
+		return points;
+	}
+	
+	protected MoveInfo moveInfo;
+	
+	protected void moveToUpdate(){
 		if(!spriteMoving && !moveTo.isEmpty()){
 			if(!moveTo.peek().isAi()){
 				moveInfo = moveTo.poll();
 				spriteMoving = true;
-				System.out.println("Next ("+moveInfo.targetX+", "+moveInfo.targetY+")");
 			}
 		}else if(spriteMoving && moveInfo != null){
 			if(Math.round(x) != Math.round(moveInfo.getTargetX()) || Math.round(y) != Math.round(moveInfo.getTargetY())){	

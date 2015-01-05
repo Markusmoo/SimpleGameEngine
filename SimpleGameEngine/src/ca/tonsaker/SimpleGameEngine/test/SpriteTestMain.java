@@ -31,7 +31,7 @@ public class SpriteTestMain extends GameEngine implements EngineFrame{
 		main.centerWindow(); //Centers window on screen
 		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Sets the default close operation to erase all memory and close the Program
 		main.setResizable(false); //Disallows the parent JFrame to be resized
-		main.setTitle("SAMPLE TITLE"); //Changes the title of the parent JFrame
+		main.setTitle("Sprite Example"); //Changes the title of the parent JFrame
 		main.setFPS(60); //The FPS (Frames per second)
 		main.setUPS(100); //The UPS (Updates per second)
 		main.run(); //Starts the update and drawing loop at the set FPS
@@ -75,16 +75,32 @@ public class SpriteTestMain extends GameEngine implements EngineFrame{
 	public void update() {
 		super.update();
 		d1.setDebugText("Sprite x:"+sprite.getX()+" Sprite y:"+sprite.getY());
-		//double degree = 22.5;
 		sprite.update();
-		//sprite.move(degree, 1); //TODO debug
-		//this.setTitle("x+="+Math.round(1/Math.tan(Math.toRadians(degree))));  //Math.round(1*Math.atan(11.25))));
 	}
 
 	@Override
 	public void render(Graphics2D g) {
 		sprite.render(g);
-		//g.drawRoundRect(350, 200, 200, 100,	20, 40);
+		if(DebugOverlay.debugging()){
+			Point lastPoint = null;
+			Point nextPoint = sprite.getNextMove();
+			if(nextPoint != null){
+				g.drawString("1("+nextPoint.x+", "+nextPoint.y+")", (float) nextPoint.x, (float) nextPoint.y); 
+				g.drawLine(sprite.getX(), sprite.getY(), nextPoint.x, nextPoint.y);
+			}
+			int idx = 0;
+			for(Point p : sprite.getQueuedMoves()){
+				g.drawString(idx+2+"("+p.x+", "+p.y+")", (float) p.x, (float) p.y); 
+				if(lastPoint != null){
+					g.drawLine(lastPoint.x, lastPoint.y, p.x, p.y);
+				}else if(nextPoint != null){
+					g.drawLine(nextPoint.x, nextPoint.y, p.x, p.y);
+				}
+				lastPoint = p;
+				idx++;
+			}
+		}
+			
 		g.dispose();
 	}
 

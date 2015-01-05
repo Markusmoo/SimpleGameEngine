@@ -182,6 +182,10 @@ public class SimpleMidiPlayer{
 		currentMidi.setTempoMPQ(mpq);
 	}
 	
+	public void setTickPosition(long tick){
+		sequencer.setTickPosition(tick);
+	}
+	
 	public float getTempoFactor(){
 		return sequencer.getTempoFactor();
 	}

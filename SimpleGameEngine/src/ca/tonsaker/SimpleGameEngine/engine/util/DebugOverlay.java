@@ -86,6 +86,10 @@ public class DebugOverlay implements EngineFrame{
 		infoList.add(debug);
 	}
 
+	public static boolean debugging(){
+		return showing;
+	}
+
 	@Override
 	public void init() {
 		DebugOverlay.addDebug(new DebugInfo());

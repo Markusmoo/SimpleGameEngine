@@ -49,6 +49,9 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 	
 	DebugInfo debugTrackPos = new DebugInfo("",Color.black,1);
 	
+	int trackPosY = this.getHeight()/2+this.getHeight()/4+40; //Y coordinate of seek bar/seek indicator/end and begin points
+	int trackLineLength = (this.getWidth()/4+this.getWidth()/2 - this.getWidth()/4); //Length of the line, not sure if necessary
+	
 	boolean midiClicked = false;
 	SimpleMidiPlayer midiPlayer;
 	
@@ -59,6 +62,8 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 	Rectangle volDown;
 	Rectangle tempoUp;
 	Rectangle tempoDown;
+	
+	Rectangle seekBar;
 	
 	Rectangle start;
 	Rectangle pause;
@@ -118,6 +123,7 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 	public void render(Graphics2D g) {
 		FontMetrics fm = g.getFontMetrics();
 		Rectangle2D text;
+		
 		if(midi != null && audio != null){
 			
 			g.draw(midi);
@@ -157,16 +163,22 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 			text = fm.getStringBounds("Volume Down", g);
 			g.drawString("Volume Down", (int)(volDown.x+volDown.getWidth()/2-text.getWidth()/2), (int)(volDown.y+volDown.getHeight()/2+text.getHeight()/2));
 			
-			int trackPosY = this.getHeight()/2+this.getHeight()/4+40; //Y coordinate of seek bar/seek indicator/end and begin points
-			
 			g.drawLine(this.getWidth()/4, trackPosY, this.getWidth()/2+this.getWidth()/4, trackPosY);  //Draws Seek bar
 			g.drawLine(this.getWidth()/4, trackPosY-10, this.getWidth()/4, trackPosY+10); //Draws Begin point
 			g.drawLine(this.getWidth()/2+this.getWidth()/4+1, trackPosY-10, this.getWidth()/2+this.getWidth()/4+1, trackPosY+10); //Draws End line (Not sure why I have to add 1 to the x but if I don't the seek bar breaches the width of the end line.)
 			
 			if(midiPlayer != null && (midiPlayer.getState() == SimpleMidiPlayer.PLAY || midiPlayer.getState() == SimpleMidiPlayer.PAUSE)){
-				int trackLineLength = (this.getWidth()/4+this.getWidth()/2 - this.getWidth()/4); //Length of the line, not sure if necessary
-				int trackPosX = (int)( ((double)midiPlayer.getTickPosition())/midiPlayer.getTicksTotal()
-		                * trackLineLength + this.getWidth()/4); //Attempt at finding X Coordinate
+				
+				
+				
+				
+				
+				int trackPosX = (int)( ((double)midiPlayer.getTickPosition())/midiPlayer.getTicksTotal() * trackLineLength + this.getWidth()/4); //Attempt at finding X Coordinate
+				
+				
+				
+				
+				
 				g.fillOval( trackPosX-3, trackPosY-3, 6, 6); //Draws Seek position indicator
 				debugTrackPos.setDebugText("TrackPosX: "+trackPosX+"/"+(this.getWidth()/4+this.getWidth()/2)+" Tick: "+midiPlayer.getTickPosition()+"/"+midiPlayer.getTicksTotal()); //Debugging purposes (top left of pic)
 			}
@@ -200,6 +212,7 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 				volDown = new Rectangle((int)(pause.getX()-110), this.getHeight()/2+10, 100, 50);
 				tempoUp = new Rectangle((int)(stop.getX()+stop.getWidth()+10), this.getHeight()/2-60, 100, 50);
 				tempoDown = new Rectangle((int)(stop.getX()+stop.getWidth()+10), this.getHeight()/2+10, 100, 50);
+				seekBar = new Rectangle(this.getWidth()/4, trackPosY-10, trackLineLength, 20);
 				try {
 					SimpleMidi mid = new SimpleMidi("soundTest", "res/HIP_HOP.mid", false, 100, SimpleMidi.LOOP_CONTINUOUSLY);
 					midiPlayer = new SimpleMidiPlayer();
@@ -223,6 +236,7 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 				stop = new Rectangle((int)(start.getX()+start.getWidth()+10), this.getHeight()/2-50, 100, 100);
 				volUp = new Rectangle((int)(pause.getX()-110), this.getHeight()/2-60, 100, 50);
 				volDown = new Rectangle((int)(pause.getX()-110), this.getHeight()/2+10, 100, 50);
+				
 			}
 		}else if(start != null && pause != null && stop != null && volUp != null && volDown != null){
 			if(start.contains(p)){
@@ -275,6 +289,9 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 						midiPlayer.setTempoBPM(midiPlayer.getTempoBPM()-10);
 					}
 				}
+			}else if(seekBar != null && seekBar.contains(p)){
+				midiPlayer.setTickPosition((int)((double)(p.x-(this.getWidth()/4)*midiPlayer.getTicksTotal())/trackLineLength));
+				System.out.println("test");
 			}
 		}
 	}
