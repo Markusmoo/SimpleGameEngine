@@ -13,7 +13,10 @@ import java.net.MalformedURLException;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
@@ -65,9 +68,13 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 	
 	Rectangle seekBar;
 	
+	Rectangle load;
+	
 	Rectangle start;
 	Rectangle pause;
 	Rectangle stop;
+	
+	SimpleMidi simpleMidi;
 	
 	@Override
 	public void init(){
@@ -103,14 +110,6 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 			public void mouseReleased(MouseEvent e) {}
 			
 		});
-		
-/*		try {
-			new SimpleMidiPlayer().play(new SimpleMidi("test", "res/HIP_HOP.mid", false));
-		} catch (InvalidMidiDataException | MidiUnavailableException
-				| IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}*/
 	}
 	
 	@Override
@@ -135,13 +134,14 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 			text = fm.getStringBounds("Audio", g);
 			g.drawString("Audio", (int)(audio.x+audio.getWidth()/2-text.getWidth()/2), (int)(audio.y+audio.getHeight()/2+text.getHeight()/2));
 		
-		}else if(start != null && pause != null && stop != null && volUp != null && volDown != null){
+		}else if(start != null && pause != null && stop != null && volUp != null && volDown != null && load != null){
 			
 			g.draw(start);
 			g.draw(pause);
 			g.draw(stop);
 			g.draw(volUp);
 			g.draw(volDown);
+			g.draw(load);
 			
 			if(tempoUp != null && tempoDown != null){
 				g.draw(tempoUp);
@@ -162,6 +162,8 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 			g.drawString("Volume Up", (int)(volUp.x+volUp.getWidth()/2-text.getWidth()/2), (int)(volUp.y+volUp.getHeight()/2+text.getHeight()/2));
 			text = fm.getStringBounds("Volume Down", g);
 			g.drawString("Volume Down", (int)(volDown.x+volDown.getWidth()/2-text.getWidth()/2), (int)(volDown.y+volDown.getHeight()/2+text.getHeight()/2));
+			text = fm.getStringBounds("Load Track", g);
+			g.drawString("Load Track", (int)(load.x+load.getWidth()/2-text.getWidth()/2), (int)(load.y+load.getHeight()/2+text.getHeight()/2));
 			
 			g.drawLine(this.getWidth()/4, trackPosY, this.getWidth()/2+this.getWidth()/4, trackPosY);  //Draws Seek bar
 			g.drawLine(this.getWidth()/4, trackPosY-10, this.getWidth()/4, trackPosY+10); //Draws Begin point
@@ -213,10 +215,11 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 				tempoUp = new Rectangle((int)(stop.getX()+stop.getWidth()+10), this.getHeight()/2-60, 100, 50);
 				tempoDown = new Rectangle((int)(stop.getX()+stop.getWidth()+10), this.getHeight()/2+10, 100, 50);
 				seekBar = new Rectangle(this.getWidth()/4, trackPosY-10, trackLineLength, 20);
+				load = new Rectangle(this.getWidth()/4+this.getWidth()/2, this.getHeight()/4-100, 100, 50);
 				try {
-					SimpleMidi mid = new SimpleMidi("soundTest", "res/HIP_HOP.mid", false, 100, SimpleMidi.LOOP_CONTINUOUSLY);
+					simpleMidi = new SimpleMidi("soundTest", "res/HIP_HOP.mid", false, 100, SimpleMidi.LOOP_CONTINUOUSLY);
 					midiPlayer = new SimpleMidiPlayer();
-					SimpleMidiPlayer.loadSimpleMIDI(mid);
+					SimpleMidiPlayer.loadSimpleMIDI(simpleMidi);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				} catch (InvalidMidiDataException e) {
@@ -238,7 +241,7 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 				volDown = new Rectangle((int)(pause.getX()-110), this.getHeight()/2+10, 100, 50);
 				
 			}
-		}else if(start != null && pause != null && stop != null && volUp != null && volDown != null){
+		}else if(start != null && pause != null && stop != null && volUp != null && volDown != null && load != null){
 			if(start.contains(p)){
 				if(!midiPlayer.isPlaying()){
 					try {
@@ -252,7 +255,7 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 			}else if(pause.contains(p)){
 				midiPlayer.pause();
 			}else if(stop.contains(p)){
-				midiPlayer.stop();
+				midiPlayer.stop(); 
 			}else if(volUp.contains(p) && midiPlayer.getVolume() < 127){
 				if(button == 1){
 					midiPlayer.setVolume(midiPlayer.getVolume()+1);
@@ -290,8 +293,26 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 					}
 				}
 			}else if(seekBar != null && seekBar.contains(p)){
-				midiPlayer.setTickPosition((int)((double)(p.x-(this.getWidth()/4)*midiPlayer.getTicksTotal())/trackLineLength));
-				System.out.println("test");
+				midiPlayer.setTickPosition((long)( (p.x*(midiPlayer.getTicksTotal()/trackLineLength)) - ((this.getWidth()/4)*(midiPlayer.getTicksTotal()/trackLineLength))));
+			}else if(load.contains(p)){
+				String filePath = JOptionPane.showInputDialog(this, "Example: %offline% res/HIP_HOP.mid      Use %online% if file is online", "Load .mid file", JOptionPane.INFORMATION_MESSAGE);
+				boolean online;
+				if(filePath.contains("%offline%")){
+					online = false;
+				}else if(filePath.contains("%online%")){
+					online = true;
+				}else{
+					throw new IllegalArgumentException("Didn't include %online% or %offline%");
+				}
+				filePath = filePath.trim().substring(filePath.indexOf("line%")+5);
+				System.out.println("Loading "+filePath);
+				try {
+					simpleMidi = new SimpleMidi("soundTest", filePath, online, 100, SimpleMidi.LOOP_CONTINUOUSLY);
+					SimpleMidiPlayer.loadSimpleMIDI(simpleMidi);
+				} catch (InvalidMidiDataException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}

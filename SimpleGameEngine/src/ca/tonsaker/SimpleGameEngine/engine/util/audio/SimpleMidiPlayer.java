@@ -13,7 +13,7 @@ import javax.sound.midi.Receiver;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.Synthesizer;
 
-//TODO JavaDoc
+//TODO JavaDoc, SoundBank Loader
 public class SimpleMidiPlayer{
 	
 	/**
