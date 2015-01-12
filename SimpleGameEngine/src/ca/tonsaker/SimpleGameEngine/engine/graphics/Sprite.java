@@ -14,7 +14,7 @@ import org.imgscalr.Scalr;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 
-//TODO JavaDocs, touch up
+//TODO JavaDocs, animations/sprite sheet
 public class Sprite implements EngineFrame{
 	
 	private class MoveInfo{
@@ -23,14 +23,19 @@ public class Sprite implements EngineFrame{
 		private double deltaX, deltaY;
 		private double direction;
 		private double speed;
-		private boolean ai;
+		private Point point;
 		
 		public MoveInfo(double targetX, double targetY, double speed){
+			point = new Point();
+			point.setLocation(targetX, targetY);
 			this.targetX = targetX;
 			this.targetY = targetY;
 			this.speed = speed;
 			calculateDirection();
-			ai = false;
+		}
+		
+		public Point getLocation(){
+			return point;
 		}
 		
 		public double getTargetX() {
@@ -49,10 +54,6 @@ public class Sprite implements EngineFrame{
 			return speed;
 		}
 
-		public boolean isAi() {
-			return ai;
-		}
-
 		public void calculateDirection(){
 			this.deltaX = targetX - x;
 			this.deltaY = targetY - y;
@@ -65,12 +66,14 @@ public class Sprite implements EngineFrame{
 	public final int SOUTH = 270;
 	public final int WEST = 190;
 	
+	public double speedMod = 1.0;
+	
 	public double x, y;
 	protected int width, height;
 	protected BufferedImage spriteImage;
 	protected boolean spriteMoving = false;
 	
-	protected Queue<MoveInfo> moveTo = new LinkedList<MoveInfo>(); //Create a moveTo Class
+	protected Queue<MoveInfo> moveTo = new LinkedList<MoveInfo>();
 	
 	public Sprite(int x, int y, int width, int height, String file){
 		this.setPosition(x, y);
@@ -136,26 +139,40 @@ public class Sprite implements EngineFrame{
 		Point[] points = new Point[moveTo.size()];
 		int idx = 0;
 		for(MoveInfo m : moveTo){
-			points[idx] = new Point();
-			points[idx].setLocation(m.getTargetX(), m.getTargetY());
+			points[idx] = m.getLocation();
 			idx++;
 		}
 		return points;
 	}
 	
+	public boolean removeQueuedMove(Point p){
+		for(MoveInfo m : moveTo){
+			if(p.equals(m.getLocation())){
+				
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	protected MoveInfo moveInfo;
+	protected double directionMoving;
 	
 	protected void moveToUpdate(){
 		if(!spriteMoving && !moveTo.isEmpty()){
-			if(!moveTo.peek().isAi()){
-				moveInfo = moveTo.poll();
-				spriteMoving = true;
-			}
+			moveInfo = moveTo.poll();
+			spriteMoving = true;
 		}else if(spriteMoving && moveInfo != null){
 			if(Math.round(x) != Math.round(moveInfo.getTargetX()) || Math.round(y) != Math.round(moveInfo.getTargetY())){	
 				moveInfo.calculateDirection();
-				double nextY = y + (moveInfo.getSpeed() * Math.cos(moveInfo.getDirection()));
-				double nextX = x + (moveInfo.getSpeed() * Math.sin(moveInfo.getDirection()));
+				double nextX = x + ((moveInfo.getSpeed()*speedMod) * Math.sin(moveInfo.getDirection()));
+				double nextY = y + ((moveInfo.getSpeed()*speedMod) * Math.cos(moveInfo.getDirection()));
+				if( (nextX-x > 0 && nextX > moveInfo.getTargetX()) || (nextX-x < 0 && nextX < moveInfo.getTargetX()) ){
+					nextX = moveInfo.getTargetX();
+				}
+				if( (nextY-y > 0 && nextY > moveInfo.getTargetY()) || (nextY-y < 0 && nextY < moveInfo.getTargetY()) ){
+					nextY = moveInfo.getTargetY();
+				}
 				setPosition(nextX, nextY);
 			}else{
 				this.setPosition(moveInfo.getTargetX(), moveInfo.getTargetY());
@@ -186,18 +203,18 @@ public class Sprite implements EngineFrame{
 	 * @param speed Amount of pixels.
 	 */
 	public void move(int degree, float speed){
-		y += speed * Math.cos(Math.toRadians(degree));
-		x += speed * Math.sin(Math.toRadians(degree));
+		y += (speed*speedMod) * Math.cos(Math.toRadians(degree));
+		x += (speed*speedMod) * Math.sin(Math.toRadians(degree));
 	}
 	
 	public void move(double radian, float speed){
-		y += speed * Math.cos(radian);
-		x += speed * Math.sin(radian);
+		y += (speed*speedMod) * Math.cos(radian);
+		x += (speed*speedMod) * Math.sin(radian);
 	}
 	
 	public void moveAmount(int x, int y){
-		this.x+=x;
-		this.y+=y;
+		this.x+=(x*speedMod);
+		this.y+=(y*speedMod);
 	}
 	
 	/**
@@ -222,6 +239,14 @@ public class Sprite implements EngineFrame{
 		this.width = width;
 		this.height = height;
 		spriteImage = Scalr.resize(spriteImage, Scalr.Method.BALANCED, width, height);
+	}
+	
+	public void setSpeedModifier(double speed){
+		speedMod = speed;
+	}
+	
+	public double getSpeedModifier(){
+		return speedMod;
 	}
 	
 	public Point getPosition(){

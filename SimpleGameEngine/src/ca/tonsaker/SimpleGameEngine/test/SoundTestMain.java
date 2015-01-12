@@ -13,10 +13,8 @@ import java.net.MalformedURLException;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
@@ -310,7 +308,6 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 					simpleMidi = new SimpleMidi("soundTest", filePath, online, 100, SimpleMidi.LOOP_CONTINUOUSLY);
 					SimpleMidiPlayer.loadSimpleMIDI(simpleMidi);
 				} catch (InvalidMidiDataException | IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

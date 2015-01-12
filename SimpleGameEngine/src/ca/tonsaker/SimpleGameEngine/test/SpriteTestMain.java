@@ -32,7 +32,7 @@ public class SpriteTestMain extends GameEngine implements EngineFrame{
 		main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Sets the default close operation to erase all memory and close the Program
 		main.setResizable(false); //Disallows the parent JFrame to be resized
 		main.setTitle("Sprite Example"); //Changes the title of the parent JFrame
-		main.setFPS(60); //The FPS (Frames per second)
+		main.setFPS(90); //The FPS (Frames per second)
 		main.setUPS(100); //The UPS (Updates per second)
 		main.run(); //Starts the update and drawing loop at the set FPS
 	}
@@ -60,7 +60,7 @@ public class SpriteTestMain extends GameEngine implements EngineFrame{
 			@Override
 			public void mousePressed(MouseEvent e) {
 				Point p = getMousePosition();
-				sprite.moveTo(p.x, p.y, 1.0f);
+				sprite.moveTo(p.x, p.y, 3.0f);
 			}
 
 			@Override

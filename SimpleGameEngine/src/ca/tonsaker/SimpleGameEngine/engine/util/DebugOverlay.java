@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
 import ca.tonsaker.SimpleGameEngine.engine.InputHandler;
 
-//TODO Allow change of debug key (F3)
+//TODO Allow change of debug key (F3), add FPS counter
 public class DebugOverlay implements EngineFrame{
 	
 	public static class DebugInfo{
@@ -18,13 +18,9 @@ public class DebugOverlay implements EngineFrame{
 		private int index;
 		
 		public DebugInfo(String text, Color col, int index){
-			if(index <= 0){
-				index = 1;
-				System.err.println("Cannot use DebugOverlay index "+index+" as it is reserved.  Setting to index 1.");
-			}
+			this.setIndex(index);
 			this.debugText = text;
 			this.colour = col;
-			this.index = index;
 		}
 		
 		private DebugInfo(){
@@ -56,7 +52,7 @@ public class DebugOverlay implements EngineFrame{
 		public void setIndex(int index) {
 			if(index <= 0){
 				index = 1;
-				System.err.println("Cannot use DebugOverlay index "+index+" as it is reserved.  Setting to index 1.");
+				throw new IllegalArgumentException("Cannot use DebugOverlay index "+index+" as it is reserved.  Setting to index 1.");
 			}
 			this.index = index;
 		}
