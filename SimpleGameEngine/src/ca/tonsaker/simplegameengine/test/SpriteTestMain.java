@@ -1,4 +1,4 @@
-package ca.tonsaker.SimpleGameEngine.test;
+package ca.tonsaker.simplegameengine.test;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -6,11 +6,11 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
-import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
-import ca.tonsaker.SimpleGameEngine.engine.graphics.Sprite;
-import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
-import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay.DebugInfo;
+import ca.tonsaker.simplegameengine.engine.EngineFrame;
+import ca.tonsaker.simplegameengine.engine.GameEngine;
+import ca.tonsaker.simplegameengine.engine.graphics.Sprite;
+import ca.tonsaker.simplegameengine.engine.util.DebugOverlay;
+import ca.tonsaker.simplegameengine.engine.util.DebugOverlay.DebugInfo;
 
 import javax.swing.JFrame;
 
@@ -41,9 +41,7 @@ public class SpriteTestMain extends GameEngine implements EngineFrame{
 	
 	@Override
 	public void init(){
-		super.init(); //Always call super.init() first!
 		sprite = new Sprite(100, 100, "res/TestPic.png");
-		sprite.init();
 		d1 = new DebugInfo("Sprite x:"+sprite.getX()+" Sprite y:"+sprite.getY(), Color.red, 1);
 		DebugOverlay.addDebug(d1);
 		this.addMouseListener(new MouseListener(){
@@ -73,7 +71,6 @@ public class SpriteTestMain extends GameEngine implements EngineFrame{
 	
 	@Override
 	public void update() {
-		super.update();
 		d1.setDebugText("Sprite x:"+sprite.getX()+" Sprite y:"+sprite.getY());
 		sprite.update();
 	}

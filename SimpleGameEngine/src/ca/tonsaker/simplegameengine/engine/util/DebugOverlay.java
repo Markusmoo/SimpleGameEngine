@@ -1,12 +1,12 @@
-package ca.tonsaker.SimpleGameEngine.engine.util;
+package ca.tonsaker.simplegameengine.engine.util;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
-import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
-import ca.tonsaker.SimpleGameEngine.engine.InputHandler;
+import ca.tonsaker.simplegameengine.engine.EngineFrame;
+import ca.tonsaker.simplegameengine.engine.InputHandler;
 
 //TODO Allow change of debug key (F3), add FPS counter
 public class DebugOverlay implements EngineFrame{

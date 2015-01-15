@@ -1,4 +1,4 @@
-package ca.tonsaker.SimpleGameEngine.engine;
+package ca.tonsaker.simplegameengine.engine;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
+import ca.tonsaker.simplegameengine.engine.util.DebugOverlay;
 
 /**
  * A simple to use Game Engine that runs in a {@link JPanel} inside of a {@link JFrame}
@@ -73,7 +73,7 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 * Starts FPS (Frames per Second) and UPS (Updates per something) loop.
 	 */ 
 	public void run(){ 
-        init();
+        initialize();
 		
 		fpsTimer.start();
 		upsTimer.start();
@@ -236,23 +236,28 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	    frame.setLocation(x, y);
 	}
 	
-	/** 
-	 * This method will set up everything need for the game to run.
-	 */ 
-	public void init(){ 
+	/**
+	 * Initializes GameEngine then calls the init().
+	 */
+	private void initialize(){
 		input = new InputHandler(frame);
 		setDoubleBuffered(true);
 		debug = new DebugOverlay(input);
 		debug.init();
+		init();
 	}
 	
 	/** 
-	 * This method will check for input, move things 
-	 * around and check for win conditions, etc.
+	 * This method will set up everything needed for the game to run.
 	 */ 
-	public void update(){
-		debug.update();
-	}
+	public abstract void init();
+	
+	/** 
+	 * This method will do all calculations in the game including checking for wins, moving sprites around, ext.
+	 * <P>
+	 * If you would like to use the DebugOverlay class.  Make sure to call debug.update(); here.
+	 */ 
+	public abstract void update();
 	
 	/** 
 	 * This method will draw everything.  It is a good idea
@@ -263,17 +268,16 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
 		if(g != null){
-			debug.render((Graphics2D) g);
 			render((Graphics2D) g);
 		}
 	}
 	
 	/** 
 	 * This method will draw all graphics on screen.
+	 * <P>
+	 * If you would like to use the DebugOverlay class. Make sure to call debug.render(Graphics2D); here.
 	 * 
 	 * @param g - The graphics2D device to paint to.
 	 */ 
-	public void render(Graphics2D g){
-		
-	}
+	public abstract void render(Graphics2D g);
 } 

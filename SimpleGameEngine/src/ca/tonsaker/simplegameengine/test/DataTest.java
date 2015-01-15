@@ -1,4 +1,4 @@
-package ca.tonsaker.SimpleGameEngine.test;
+package ca.tonsaker.simplegameengine.test;
 
 import java.io.Serializable;
 

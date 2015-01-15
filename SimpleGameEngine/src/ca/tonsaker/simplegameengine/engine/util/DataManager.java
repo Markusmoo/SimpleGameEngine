@@ -1,4 +1,4 @@
-package ca.tonsaker.SimpleGameEngine.engine.util;
+package ca.tonsaker.simplegameengine.engine.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;

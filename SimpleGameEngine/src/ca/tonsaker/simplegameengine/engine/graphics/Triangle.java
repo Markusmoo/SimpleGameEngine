@@ -1,4 +1,4 @@
-package ca.tonsaker.SimpleGameEngine.engine.graphics;
+package ca.tonsaker.simplegameengine.engine.graphics;
 
 import java.awt.Point;
 import java.awt.Polygon;

@@ -1,4 +1,4 @@
-package ca.tonsaker.SimpleGameEngine.test;
+package ca.tonsaker.simplegameengine.test;
 
 import java.awt.Color;
 import java.awt.FontMetrics;
@@ -16,12 +16,12 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
-import ca.tonsaker.SimpleGameEngine.engine.GameEngine;
-import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay;
-import ca.tonsaker.SimpleGameEngine.engine.util.DebugOverlay.DebugInfo;
-import ca.tonsaker.SimpleGameEngine.engine.util.audio.SimpleMidi;
-import ca.tonsaker.SimpleGameEngine.engine.util.audio.SimpleMidiPlayer;
+import ca.tonsaker.simplegameengine.engine.EngineFrame;
+import ca.tonsaker.simplegameengine.engine.GameEngine;
+import ca.tonsaker.simplegameengine.engine.util.DebugOverlay;
+import ca.tonsaker.simplegameengine.engine.util.DebugOverlay.DebugInfo;
+import ca.tonsaker.simplegameengine.engine.util.audio.SimpleMidi;
+import ca.tonsaker.simplegameengine.engine.util.audio.SimpleMidiPlayer;
 
 public class SoundTestMain extends GameEngine implements EngineFrame{
 	
@@ -76,7 +76,6 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 	
 	@Override
 	public void init(){
-		super.init(); //Always call super.init() first!
 		midi = new Rectangle(this.getWidth()/2-110, this.getHeight()/2-50, 100, 100);
 		audio = new Rectangle(this.getWidth()/2+10, this.getHeight()/2-50, 100, 100);
 		
@@ -111,10 +110,7 @@ public class SoundTestMain extends GameEngine implements EngineFrame{
 	}
 	
 	@Override
-	public void update() {
-		super.update();
-		
-	}
+	public void update() {}
 
 	@Override
 	public void render(Graphics2D g) {

@@ -1,7 +1,8 @@
-package ca.tonsaker.SimpleGameEngine.engine.graphics;
+package ca.tonsaker.simplegameengine.engine.graphics;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -12,11 +13,9 @@ import javax.imageio.ImageIO;
 
 import org.imgscalr.Scalr;
 
-import ca.tonsaker.SimpleGameEngine.engine.EngineFrame;
-
 //TODO JavaDocs, animations/sprite sheet
-public class Sprite implements EngineFrame{
-	
+public class Sprite{
+
 	private class MoveInfo{
 
 		private double targetX, targetY;
@@ -73,16 +72,26 @@ public class Sprite implements EngineFrame{
 	protected BufferedImage spriteImage;
 	protected boolean spriteMoving = false;
 	
+	protected Rectangle spriteBounds;
+	
 	protected Queue<MoveInfo> moveTo = new LinkedList<MoveInfo>();
 	
 	public Sprite(int x, int y, int width, int height, String file){
+		spriteBounds = new Rectangle(x,y,width,height);
 		this.setPosition(x, y);
 		this.setImage(file);
-		this.setWidth(width);
-		this.setHeight(height);
+		this.resize(width, height);
+	}
+	
+	public Sprite(int x, int y, int width, int height, BufferedImage preClickedImage) {
+		spriteBounds = new Rectangle(x,y,width,height);
+		this.setPosition(x, y);
+		this.setImage(preClickedImage);
+		this.resize(width, height);
 	}
 	
 	public Sprite(int x, int y, String file){
+		spriteBounds = new Rectangle(x,y,0,0);
 		this.setPosition(x, y);
 		this.setImage(file);
 		this.setWidth(spriteImage.getWidth());
@@ -90,6 +99,7 @@ public class Sprite implements EngineFrame{
 	}
 	
 	public Sprite(int x, int y, BufferedImage img){
+		spriteBounds = new Rectangle(x,y,0,0);
 		this.setPosition(x, y);
 		this.setImage(img);
 		this.setWidth(spriteImage.getWidth());
@@ -97,6 +107,7 @@ public class Sprite implements EngineFrame{
 	}
 	
 	public Sprite(String file){
+		spriteBounds = new Rectangle();
 		this.setPosition(0, 0);
 		this.setImage(file);
 		this.setWidth(spriteImage.getWidth());
@@ -104,23 +115,26 @@ public class Sprite implements EngineFrame{
 	}
 	
 	public Sprite(BufferedImage img){
+		spriteBounds = new Rectangle();
 		this.setPosition(0, 0);
 		this.setImage(img);
 		this.setWidth(spriteImage.getWidth());
 		this.setHeight(spriteImage.getHeight());
 	}
-
-	@Override
-	public void init() {
+	
+	public Sprite(){
+		spriteBounds = new Rectangle();
+		this.setPosition(0, 0);
+		this.setImage(new BufferedImage(0, 0, BufferedImage.TYPE_INT_RGB));
+		this.setWidth(spriteImage.getWidth());
+		this.setHeight(spriteImage.getHeight());
 		
 	}
 
-	@Override
 	public void render(Graphics2D g) {
 		g.drawImage(spriteImage, (int) x, (int) y, null);
 	}
 
-	@Override
 	public void update() {
 		moveToUpdate();
 	}
@@ -205,16 +219,19 @@ public class Sprite implements EngineFrame{
 	public void move(int degree, float speed){
 		y += (speed*speedMod) * Math.cos(Math.toRadians(degree));
 		x += (speed*speedMod) * Math.sin(Math.toRadians(degree));
+		spriteBounds.setLocation((int) x, (int) y);
 	}
 	
 	public void move(double radian, float speed){
 		y += (speed*speedMod) * Math.cos(radian);
 		x += (speed*speedMod) * Math.sin(radian);
+		spriteBounds.setLocation((int) x, (int) y);
 	}
 	
 	public void moveAmount(int x, int y){
 		this.x+=(x*speedMod);
 		this.y+=(y*speedMod);
+		spriteBounds.setLocation((int) x, (int) y);
 	}
 	
 	/**
@@ -226,7 +243,8 @@ public class Sprite implements EngineFrame{
 	public void scale(double widthPercent, double heightPercent){
 		this.width*=widthPercent;
 		this.height*=heightPercent;
-		spriteImage = Scalr.resize(spriteImage, Scalr.Method.BALANCED, this.width, this.height);
+		spriteImage = Scalr.resize(spriteImage, Scalr.Mode.FIT_EXACT, this.width, this.height);
+		spriteBounds.setBounds((int) x, (int) y, (int) width, (int) height);
 	}
 	
 	/**
@@ -238,7 +256,44 @@ public class Sprite implements EngineFrame{
 	public void resize(int width, int height){
 		this.width = width;
 		this.height = height;
-		spriteImage = Scalr.resize(spriteImage, Scalr.Method.BALANCED, width, height);
+		spriteImage = Scalr.resize(spriteImage, Scalr.Mode.FIT_EXACT, width, height);
+		spriteBounds.setBounds((int) x, (int) y, (int) width, (int) height);
+	}
+	
+	public boolean contains(Sprite sprite){
+		return spriteBounds.contains(sprite.getBounds());
+	}
+	
+	public boolean contains(Rectangle rectangle){
+		return spriteBounds.contains(rectangle);
+	}
+	
+	public boolean contains(Point point){
+		return spriteBounds.contains(point);
+	}
+	
+	public boolean contains(int x, int y){
+		return spriteBounds.contains(x,y);
+	}
+	
+	public boolean contains(int x, int y, int width, int height){
+		return spriteBounds.contains(x,y,width,height);
+	}
+	
+	public boolean intersects(Sprite sprite){
+		return spriteBounds.intersects(sprite.getBounds());
+	}
+	
+	public boolean intersects(Rectangle rectangle){
+		return spriteBounds.intersects(rectangle);
+	}
+	
+	public boolean intersectsLine(int x1, int y1, int x2, int y2){
+		return spriteBounds.intersectsLine(x1, y1, x2, y2);
+	}
+	
+	public boolean intersects(int x, int y, int width, int height){
+		return spriteBounds.intersects(x,y,width,height);
 	}
 	
 	public void setSpeedModifier(double speed){
@@ -273,9 +328,14 @@ public class Sprite implements EngineFrame{
 		return spriteImage;
 	}
 	
+	public Rectangle getBounds(){
+		return spriteBounds;
+	}
+	
 	public void setPosition(double x, double y){
 		this.x = x;
 		this.y = y;
+		spriteBounds.setLocation((int) x, (int) y);
 	}
 	
 	public void setPosition(Point point){
@@ -283,11 +343,11 @@ public class Sprite implements EngineFrame{
 	}
 	
 	public void setX(int x){
-		setPosition((int) x, (int) this.y);
+		setPosition(x, (int) this.y);
 	}
 	
 	public void setY(int y){
-		setPosition((int) this.x, (int) y);
+		setPosition((int) this.x, y);
 	}
 	
 	public void setWidth(int width){
@@ -302,6 +362,7 @@ public class Sprite implements EngineFrame{
 		try {
 			this.spriteImage = ImageIO.read(new File(filePath));
 		} catch (IOException e) {
+			System.err.println("Failed to open: "+filePath);
 			e.printStackTrace();
 		}
 	}

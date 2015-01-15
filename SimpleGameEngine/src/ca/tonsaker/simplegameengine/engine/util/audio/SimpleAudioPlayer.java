@@ -1,4 +1,4 @@
-package ca.tonsaker.SimpleGameEngine.engine.util.audio;
+package ca.tonsaker.simplegameengine.engine.util.audio;
 
 import java.util.ArrayList;
 

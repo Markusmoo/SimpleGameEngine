@@ -1,4 +1,4 @@
-package ca.tonsaker.SimpleGameEngine.engine;
+package ca.tonsaker.simplegameengine.engine;
 
 import java.awt.Component; 
 import java.awt.Point;
