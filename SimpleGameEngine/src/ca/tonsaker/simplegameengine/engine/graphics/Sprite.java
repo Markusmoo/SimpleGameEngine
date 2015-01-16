@@ -83,10 +83,10 @@ public class Sprite{
 		this.resize(width, height);
 	}
 	
-	public Sprite(int x, int y, int width, int height, BufferedImage preClickedImage) {
+	public Sprite(int x, int y, int width, int height, BufferedImage img) {
 		spriteBounds = new Rectangle(x,y,width,height);
 		this.setPosition(x, y);
-		this.setImage(preClickedImage);
+		this.setImage(img);
 		this.resize(width, height);
 	}
 	
@@ -243,12 +243,11 @@ public class Sprite{
 	public void scale(double widthPercent, double heightPercent){
 		this.width*=widthPercent;
 		this.height*=heightPercent;
-		spriteImage = Scalr.resize(spriteImage, Scalr.Mode.FIT_EXACT, this.width, this.height);
+		spriteImage = Scalr.resize(spriteImage, Scalr.Mode.AUTOMATIC, this.width, this.height);
 		spriteBounds.setBounds((int) x, (int) y, (int) width, (int) height);
 	}
 	
 	/**
-	 * 
 	 * 
 	 * @param width
 	 * @param height
@@ -256,7 +255,7 @@ public class Sprite{
 	public void resize(int width, int height){
 		this.width = width;
 		this.height = height;
-		spriteImage = Scalr.resize(spriteImage, Scalr.Mode.FIT_EXACT, width, height);
+		spriteImage = Scalr.resize(spriteImage, Scalr.Mode.AUTOMATIC, width, height);
 		spriteBounds.setBounds((int) x, (int) y, (int) width, (int) height);
 	}
 	

@@ -54,6 +54,7 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 
     			@Override
     			public void actionPerformed(ActionEvent e) {
+    				debug.update();
     				update();
     			}
     			
@@ -226,6 +227,15 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 */
 	public boolean isResizable(){
 		return frame.isResizable();
+	}
+	
+	/**
+	 * Gets the input handler for this game engine.
+	 * 
+	 * @return the game engine input handler
+	 */
+	public InputHandler getInput(){
+		return input;
 	}
 	
 	//TODO doc

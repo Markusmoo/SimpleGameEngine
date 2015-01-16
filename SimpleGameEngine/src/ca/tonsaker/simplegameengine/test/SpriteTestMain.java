@@ -17,13 +17,8 @@ import javax.swing.JFrame;
 @SuppressWarnings("serial")
 public class SpriteTestMain extends GameEngine implements EngineFrame{
 	
-	DebugOverlay debug;
-	
-	//TODO Fix NullError from graphic rendering and fix sprite.moveTo not queuing and acting weird
-	
 	public SpriteTestMain(int x, int y, int width, int height) {
 		super(x, y, width, height);
-		
 	}
 
 	public static void main(String[] args){
@@ -38,6 +33,7 @@ public class SpriteTestMain extends GameEngine implements EngineFrame{
 	}
 	
 	DebugInfo d1;
+	Sprite sprite;
 	
 	@Override
 	public void init(){
@@ -58,7 +54,7 @@ public class SpriteTestMain extends GameEngine implements EngineFrame{
 			@Override
 			public void mousePressed(MouseEvent e) {
 				Point p = getMousePosition();
-				sprite.moveTo(p.x, p.y, 3.0f);
+				sprite.moveTo(p.x, p.y, 0.1f);
 			}
 
 			@Override
@@ -66,8 +62,6 @@ public class SpriteTestMain extends GameEngine implements EngineFrame{
 			
 		});
 	}
-	
-	Sprite sprite;
 	
 	@Override
 	public void update() {
@@ -97,7 +91,7 @@ public class SpriteTestMain extends GameEngine implements EngineFrame{
 				idx++;
 			}
 		}
-			
+		debug.render(g);
 		g.dispose();
 	}
 
