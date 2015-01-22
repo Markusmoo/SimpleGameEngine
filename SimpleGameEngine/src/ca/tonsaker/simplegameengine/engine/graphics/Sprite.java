@@ -371,6 +371,6 @@ public class Sprite{
 	}
 	
 	public String toString(){
-		return "Sprite(X:"+x+" Y:"+y+")";
+		return "ca.tonsaker.simplegameengine.engine.graphics.Sprite(X:"+x+" Y:"+y+")";
 	}
 }
