@@ -26,50 +26,49 @@ public abstract class GameEngine extends JPanel implements EngineFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 4475810415750194722L;
-		protected int fps;
-        protected int ups;
-        
-        protected DebugOverlay debug;
-        
-        protected Timer fpsTimer;
-        protected Timer upsTimer;
-        
-        protected JFrame frame; 
-        public InputHandler input; 
-        
-        //TODO Fix Graphics Error (PaintComponent() ?) caused by premature repainting on 
-        
-        public GameEngine(int x, int y, int width, int height){
-        	this.setIgnoreRepaint(true);
-    		fpsTimer = new Timer(0, new ActionListener(){
+	protected int fps;
+    protected int ups;
+    
+    protected DebugOverlay debug;
+    
+    protected Timer fpsTimer;
+    protected Timer upsTimer;
+    
+    protected JFrame frame; 
+    public InputHandler input; 
+    
+    //TODO Fix Graphics Error (PaintComponent() ?) caused by premature repainting on 
+    
+    public GameEngine(int x, int y, int width, int height){
+    	this.setIgnoreRepaint(true);
+		fpsTimer = new Timer(0, new ActionListener(){
 
-    			@Override
-    			public void actionPerformed(ActionEvent e) {
-    				repaint();
-    			}
-    			
-    		});
-    		
-    		upsTimer = new Timer(0, new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				repaint();
+			}
+			
+		});
+		
+		upsTimer = new Timer(0, new ActionListener(){
 
-    			@Override
-    			public void actionPerformed(ActionEvent e) {
-    				debug.update();
-    				update();
-    			}
-    			
-    		});
-        	setFPS(60); //Sets default FPS
-        	setUPS(30); //Sets default UPS
-        	frame = new JFrame(); //Creates a JFrame that will contain this (JPanel)
-        	frame.setLocation(x, y); //Sets the location of the JFrame
-        	frame.setPreferredSize(new Dimension(width, height)); //Sets the size of the JFrame
-        	frame.add(this); //Adds this object (JPanel) to the JFrame
-        	frame.pack();
-        	frame.setVisible(true);
-        }
-	 
-	        
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				debug.update();
+				update();
+			}
+			
+		});
+    	setFPS(60); //Sets default FPS
+    	setUPS(30); //Sets default UPS
+    	frame = new JFrame(); //Creates a JFrame that will contain this (JPanel)
+    	frame.setLocation(x, y); //Sets the location of the JFrame
+    	frame.setPreferredSize(new Dimension(width, height)); //Sets the size of the JFrame
+    	frame.add(this); //Adds this object (JPanel) to the JFrame
+    	frame.pack();
+    	frame.setVisible(true);
+    }
+	   
     /** 
 	 * Starts FPS (Frames per Second) and UPS (Updates per something) loop.
 	 */ 

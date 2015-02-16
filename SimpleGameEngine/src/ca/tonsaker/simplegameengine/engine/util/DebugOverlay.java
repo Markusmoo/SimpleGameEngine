@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import ca.tonsaker.simplegameengine.engine.EngineFrame;
+import ca.tonsaker.simplegameengine.engine.GameEngine;
 import ca.tonsaker.simplegameengine.engine.InputHandler;
 
 //TODO Allow change of debug key (F3), add FPS counter

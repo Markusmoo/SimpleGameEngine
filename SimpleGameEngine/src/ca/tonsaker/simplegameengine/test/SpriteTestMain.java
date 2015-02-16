@@ -20,6 +20,8 @@ public class SpriteTestMain extends GameEngine implements EngineFrame{
 	public SpriteTestMain(int x, int y, int width, int height) {
 		super(x, y, width, height);
 	}
+	
+	int i = 0x0032f;
 
 	public static void main(String[] args){
 		SpriteTestMain main = new SpriteTestMain(0,0,800,600); //Creates the JFrame at X,Y, and then sets the WIDTH and HEIGHT
@@ -37,7 +39,7 @@ public class SpriteTestMain extends GameEngine implements EngineFrame{
 	
 	@Override
 	public void init(){
-		sprite = new Sprite(100, 100, "res/TestPic.png");
+		sprite = new Sprite(100, 100, "res/TestPic.png", false);
 		d1 = new DebugInfo("Sprite x:"+sprite.getX()+" Sprite y:"+sprite.getY(), Color.red, 1);
 		DebugOverlay.addDebug(d1);
 		this.addMouseListener(new MouseListener(){
@@ -54,7 +56,7 @@ public class SpriteTestMain extends GameEngine implements EngineFrame{
 			@Override
 			public void mousePressed(MouseEvent e) {
 				Point p = getMousePosition();
-				sprite.moveTo(p.x, p.y, 0.1f);
+				sprite.moveTo(p.x, p.y, 2.0f);
 			}
 
 			@Override

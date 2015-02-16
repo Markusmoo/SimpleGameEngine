@@ -74,12 +74,16 @@ public class Sprite{
 	
 	protected Rectangle spriteBounds;
 	
+	protected boolean isShape = false;
+	protected boolean fillShape = true;
+	protected String shape;
+	
 	protected Queue<MoveInfo> moveTo = new LinkedList<MoveInfo>();
 	
-	public Sprite(int x, int y, int width, int height, String file){
+	public Sprite(int x, int y, int width, int height, String file, boolean isShape){
 		spriteBounds = new Rectangle(x,y,width,height);
 		this.setPosition(x, y);
-		this.setImage(file);
+		this.setImage(file, isShape);
 		this.resize(width, height);
 	}
 	
@@ -90,10 +94,10 @@ public class Sprite{
 		this.resize(width, height);
 	}
 	
-	public Sprite(int x, int y, String file){
+	public Sprite(int x, int y, String file, boolean isShape){
 		spriteBounds = new Rectangle(x,y,0,0);
 		this.setPosition(x, y);
-		this.setImage(file);
+		this.setImage(file, isShape);
 		this.setWidth(spriteImage.getWidth());
 		this.setHeight(spriteImage.getHeight());
 	}
@@ -106,10 +110,10 @@ public class Sprite{
 		this.setHeight(spriteImage.getHeight());
 	}
 	
-	public Sprite(String file){
+	public Sprite(String file, boolean isShape){
 		spriteBounds = new Rectangle();
 		this.setPosition(0, 0);
-		this.setImage(file);
+		this.setImage(file, isShape);
 		this.setWidth(spriteImage.getWidth());
 		this.setHeight(spriteImage.getHeight());
 	}
@@ -132,7 +136,24 @@ public class Sprite{
 	}
 
 	public void render(Graphics2D g) {
-		g.drawImage(spriteImage, (int) x, (int) y, null);
+		if(isShape){
+			if(fillShape){
+				switch(shape){
+					case("square"): g.fillRect(getX(), getY(), getWidth(), getHeight()); return;
+					case("rectangle"): g.fillRect(getX(), getY(), getWidth(), getHeight()); return;
+					case("box"): g.fillRect(getX(), getY(), getWidth(), getHeight()); return;
+					case("triangle"): g.fill(new Triangle(getX(), getY()+getHeight(), getX()+getWidth()/2, getY(), getX()+getWidth(), getY()+getHeight())); return;
+					case("ellipse"): g.fillOval(getX(), getY(), getWidth(), getHeight()); return;
+					case("circle"): g.fillOval(getX(), getY(), getWidth(), getHeight()); return;
+					case("oval"):  g.fillOval(getX(), getY(), getWidth(), getHeight()); return;
+					default: throw new RuntimeException("ERROR: "+shape+" is not a valid shape!");
+				}
+			}else{
+				
+			}
+		}else{
+			g.drawImage(spriteImage, (int) x, (int) y, null);
+		}
 	}
 
 	public void update() {
@@ -357,17 +378,43 @@ public class Sprite{
 		this.resize(this.width, height);
 	}
 	
-	public void setImage(String filePath){
-		try {
-			this.spriteImage = ImageIO.read(new File(filePath));
-		} catch (IOException e) {
-			System.err.println("Failed to open: "+filePath);
-			e.printStackTrace();
+	public void setImage(String filePath, boolean isShape){
+		if(isShape){
+			this.isShape = true;
+			String shapeType = filePath.trim();
+			shapeType = shapeType.toLowerCase();
+			switch(shapeType){
+				case("square"): shape = shapeType; return;
+				case("rectangle"): shape = shapeType; return;
+				case("box"): shape = shapeType; return;
+				case("triangle"): shape = shapeType; return;
+				case("ellipse"): shape = shapeType; return;
+				case("circle"): shape = shapeType; return;
+				case("oval"): shape = shapeType; return;
+				default: throw new RuntimeException("ERROR: "+filePath+" is not a valid shape!");
+			}
+		}else{
+			try {
+				this.isShape = false;
+				this.spriteImage = ImageIO.read(new File(filePath));
+			} catch (IOException e) {
+				System.err.println("Failed to open: "+filePath);
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	public void setImage(BufferedImage image){
+		this.isShape = false;
 		this.spriteImage = image;
+	}
+	
+	public void setShapeFilled(boolean fill){
+		this.fillShape = fill;
+	}
+	
+	public boolean isShapeFilled(){
+		return this.fillShape;
 	}
 	
 	public String toString(){
